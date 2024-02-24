@@ -1,0 +1,35 @@
+.box{   
+    height: 700px;;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 0px 15px;
+    
+}
+
+/* .center {
+    box-shadow: 1px 1px 10px black;
+} */
+.left{
+cursor: default;
+}
+.right{
+cursor: default;
+}
+.center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height:600px;
+    transition: 2s all ;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    border-radius: 30px;
+    color:white;
+    font-size: 70px;
+}
