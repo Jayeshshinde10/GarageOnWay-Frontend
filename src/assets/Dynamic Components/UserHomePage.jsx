@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import userData from "../Contexts/UserContext";
+import { Await } from "react-router-dom";
+import Card from "./Card";
 export default function UserHomePage() {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
@@ -8,54 +10,51 @@ export default function UserHomePage() {
   const { username, user_id } = useContext(userData);
 
   useEffect(() => {
-    getLocation();
-    postLocation();
+  getLocation();
   }, [])
-  async function postLocation() {
-    try {
-      let response = await axios.post(`http://127.0.0.1:8000/CheckEntryExists/`,{Customer_id:Number(user_id)})
-      console.log(" the user id is " + user_id)
-      if (response.status === 200) {
-        console.log(" the user id is " + response.data.id)
-        if (response.data.id != 'not found')
-          response = await axios.patch(`http://127.0.0.1:8000/customer/${response.data.id}/`, {
-          latitude: Number(latitude),
-          longitude: Number(longitude),
-        })
-        console.log("if block executed ")
-      }
-      else {
-          response = await axios.post("http://127.0.0.1:8000/customer/", {
-          latitude: Number(latitude),
-          longitude: Number(longitude),
-          Customer_id: Number(user_id),
-        })
-        console.log(" else block executed ")
-      }
-    }
-    catch (error) {
-      console.log("the error is" + error)
-    }
-  }
+  // no need to put location in database as it is available and requires frequent updating
+  // async function postLocation() {
+  //   try {
+  //     let response = await axios.post(`http://127.0.0.1:8000/CheckEntryExists/`,
+  //     {Customer_id:Number(user_id),latitude:parseFloat(latitude),longitude:parseFloat(longitude)})
+  //     if (response.status === 200) {
+  //       console.log(" the user id is " + response.data.message)
+  //       console.log("if block executed ")
+  //     }
+  //   }
+  //   catch (error) {
+  //     console.log("the error is" + error)
+  //   }
+  // }
 
-  const getLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLatitude(position.coords.latitude);
-          setLongitude(position.coords.longitude);
-        },
-        (error) => {
-          setErrorMessage(error.message);
-        }
-      );
-    } else {
-      setErrorMessage("Geolocation is not supported by this browser.");
+  const getLocation = async () => {
+    try {
+      if (navigator.geolocation) {
+        const position = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+        setLatitude(position.coords.latitude);
+        setLongitude(position.coords.longitude);
+      } else {
+        setErrorMessage("Geolocation is not supported by this browser.");
+      }
+    } catch (error) {
+      setErrorMessage(error.message);
     }
   };
+  
+  const array = [1,2,3,4,5,6,7,8,9,10]
   return (
     <>
       <h1>{`latitude is ${latitude} and longitude is ${longitude} and the user is ${username}`}</h1>
+      <Card/>
+      <br></br>
+      <Card/>
+      <br></br>
+      <Card/>
+      <br></br>
+      <Card/>
+
     </>
   )
 }
