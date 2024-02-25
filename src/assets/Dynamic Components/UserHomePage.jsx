@@ -3,38 +3,40 @@ import { useContext, useEffect, useState } from "react";
 import userData from "../Contexts/UserContext";
 import { Await } from "react-router-dom";
 import Card from "./Card";
+import FilterBox from "./FilterBox";
 export default function UserHomePage() {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const { username, user_id } = useContext(userData);
+  const [serviceProviders,setServiceProviders] = useState([])
 
   useEffect(() => {
   getLocation();
+  getServiceProviderData();
   }, [])
-  // no need to put location in database as it is available and requires frequent updating
-  // async function postLocation() {
-  //   try {
-  //     let response = await axios.post(`http://127.0.0.1:8000/CheckEntryExists/`,
-  //     {Customer_id:Number(user_id),latitude:parseFloat(latitude),longitude:parseFloat(longitude)})
-  //     if (response.status === 200) {
-  //       console.log(" the user id is " + response.data.message)
-  //       console.log("if block executed ")
-  //     }
-  //   }
-  //   catch (error) {
-  //     console.log("the error is" + error)
-  //   }
-  // }
-
-  const getLocation = async () => {
+ 
+  const getLocation = () => {
     try {
       if (navigator.geolocation) {
-        const position = await new Promise((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(resolve, reject);
-        });
-        setLatitude(position.coords.latitude);
-        setLongitude(position.coords.longitude);
+        const options = {
+          enableHighAccuracy: true, // Set this to true for high accuracy
+        };
+        const watchId = navigator.geolocation.watchPosition(
+          (position) => {
+            console.log("the accuracy is " + position.coords.accuracy);
+            setLatitude(position.coords.latitude);
+            setLongitude(position.coords.longitude);
+          },
+          (error) => {
+            setErrorMessage(error.message);
+          },
+          options
+        );
+  
+        // Optionally, you can store the watchId if you want to clear the watch later
+        // For example, you can use navigator.geolocation.clearWatch(watchId) to stop watching
+  
       } else {
         setErrorMessage("Geolocation is not supported by this browser.");
       }
@@ -42,19 +44,22 @@ export default function UserHomePage() {
       setErrorMessage(error.message);
     }
   };
-  
-  const array = [1,2,3,4,5,6,7,8,9,10]
+   async function getServiceProviderData(){
+   const response = await axios.get('http://127.0.0.1:8000/ServiceProvider/')
+   if(response.status === 200){
+    setServiceProviders(response.data)
+    console.log("the type of serviceproviders data is "+serviceProviders)
+    console.log(response.data)
+   }  
+   }
   return (
     <>
+    {/* <FilterBox/> */}
       <h1>{`latitude is ${latitude} and longitude is ${longitude} and the user is ${username}`}</h1>
-      <Card/>
-      <br></br>
-      <Card/>
-      <br></br>
-      <Card/>
-      <br></br>
-      <Card/>
-
+      {serviceProviders.map(item=>{
+        console.log(item)
+        return (<Card title={item.oraginazation_name} key={item.id} landmark={item.near_by_landmark} openingHours={item.opening_time}></Card>)
+      })}
     </>
   )
 }

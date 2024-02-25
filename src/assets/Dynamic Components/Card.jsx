@@ -31,6 +31,16 @@ const Card = ({ title, image, about, price, openingHours, landmark, onRequestCli
             <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293z" clipRule="evenodd" />
           </svg>
         </button>
+        {/* book a slot button and make immediate request*/}
+        <button
+          className="inline-flex items-center px-2 py-1 bg-purple-600 text-white rounded-md hover:bg-purple-700 focus:ring-4 focus:ring-purple-500 focus:outline-none"
+          onClick={onRequestClick}
+        >
+          Book a Slot
+          <svg className="ml-1 -mr-1 w-3 h-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293z" clipRule="evenodd" />
+          </svg>
+        </button>
       </div>
     </div>
   );
