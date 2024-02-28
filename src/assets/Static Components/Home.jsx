@@ -5,11 +5,12 @@ import UserHomePage from "../Dynamic Components/UserHomePage";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ServiceProviderForm from "./ServiceProviderForm";
+import Sidebar from "./Sidebar";
 export default function Home(){
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const navigator = useNavigate()
     const toggleSidebar = () => {
-        setSidebarOpen(!isSidebarOpen);
+        setSidebarOpen(data => !data);
     };
     const {isLoggedIn,username,handleLogin,handleLogout,ServiceProviderdata} = useContext(userData);
     console.log(" is logged in is :"+isLoggedIn)
@@ -22,7 +23,7 @@ export default function Home(){
             <nav className="bg-gradient-to-r from-purple-700 to-pink-500 p-4">
                 <div className="container mx-auto flex items-center justify-between">
                     <div className="text-white text-4xl font-semibold">GW</div>
-                    <div className="hidden md:flex space-x-4">
+                    {isSidebarOpen?<Sidebar/> :<div className="hidden md:flex space-x-4">
                         <a href="#" className="text-white hover:text-gray-300">Home</a>
                         <a href="#" className="text-white hover:text-gray-300">About</a>
                         <a href="#" className="text-white hover:text-gray-300">Services</a>
@@ -42,8 +43,9 @@ export default function Home(){
     </button>:
                         <a href="/login" className="text-white hover:text-gray-300">Login </a>}
                     </div>
+}
                     <div className="md:hidden">
-                        <button onClick={toggleSidebar} className="text-white">
+                        <button onClick={()=>{toggleSidebar()}} className="text-white">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
                             </svg>
