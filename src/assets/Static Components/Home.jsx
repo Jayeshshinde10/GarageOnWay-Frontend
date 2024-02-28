@@ -12,6 +12,9 @@ export default function Home(){
     const toggleSidebar = () => {
         setSidebarOpen(data => !data);
     };
+    function CloseSidebar(){
+        isSidebarOpen(false)
+    }
     const {isLoggedIn,username,handleLogin,handleLogout,ServiceProviderdata} = useContext(userData);
     console.log(" is logged in is :"+isLoggedIn)
 
@@ -23,7 +26,7 @@ export default function Home(){
             <nav className="bg-gradient-to-r from-purple-700 to-pink-500 p-4">
                 <div className="container mx-auto flex items-center justify-between">
                     <div className="text-white text-4xl font-semibold">GW</div>
-                    {isSidebarOpen?<Sidebar toggleSidebar={toggleSidebar}/> :<div className="hidden md:flex space-x-4">
+                    {isSidebarOpen?<Sidebar toggleSidebar={CloseSidebar}/> :<div className="hidden md:flex space-x-4">
                         <a href="#" className="text-white hover:text-gray-300">Home</a>
                         <a href="#" className="text-white hover:text-gray-300">About</a>
                         <a href="#" className="text-white hover:text-gray-300">Services</a>
