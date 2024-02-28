@@ -4,10 +4,10 @@ export default function Sidebar(toggleSidebar) {
     return (
         <>
         
-        <div className="fixed top-0 right-0 w-full h-full bg-gradient-to-r from-purple-700 to-pink-500">
+        <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-r from-purple-700 to-pink-500">
             <div className="flex flex-col justify-start py-10 ">
                 <div className="flex flex-row text-white justify-evenly">
-                    <div className="absolute top-3 left-5 text-3xl" onClick={toggleSidebar}>x</div>
+                    <div className="absolute top-3 left-5 text-3xl" onClick={()=>toggleSidebar()}>x</div>
                     <div className="text-5xl">GW</div></div>
             </div>
             <div className="text-white">
