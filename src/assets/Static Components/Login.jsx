@@ -1,15 +1,17 @@
 import React, { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import userData from '../Contexts/UserContext';
+import App from '../../App';
 
 function LoginBox() {
   const [credentials, setCredentials] = useState({
     username: '',
     password: '',
   });
+  const Navigator = useNavigate()
   const user = useContext(userData);
   console.log("the user is logged in or not ",)
   const handleSubmit = (e) => {
@@ -24,6 +26,8 @@ function LoginBox() {
         console.log(response.data.access);
         localStorage.removeItem('access_token')
         localStorage.setItem('access_token', JSON.stringify(response.data.access)); 
+        Navigator('/')
+        location.reload()
         
       });
   };

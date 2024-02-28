@@ -6,6 +6,10 @@ import React from "react";
     handleLogin:()=>{},
     accessToken:'',
     refreshToken:'',
+    isServiceProvider:null,
     handleLogout:()=>{},
+    ServiceProviderdata:null,
+    isloading:true,
+    handleIsLoading:()=>{}
 })
 export default userData;

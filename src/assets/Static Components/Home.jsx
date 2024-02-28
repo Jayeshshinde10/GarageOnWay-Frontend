@@ -2,17 +2,22 @@ import ImageBox from "./Imagebox";
 import { useContext, useState } from "react";
 import userData from "../Contexts/UserContext";
 import UserHomePage from "../Dynamic Components/UserHomePage";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import ServiceProviderForm from "./ServiceProviderForm";
 export default function Home(){
     const [isSidebarOpen, setSidebarOpen] = useState(false);
+    const navigator = useNavigate()
     const toggleSidebar = () => {
         setSidebarOpen(!isSidebarOpen);
     };
-    const {isLoggedIn,username} = useContext(userData);
+    const {isLoggedIn,username,handleLogin,handleLogout,ServiceProviderdata} = useContext(userData);
     console.log(" is logged in is :"+isLoggedIn)
 
     console.log("in user home got the "+{username})
     return (
         <>
+        {/* {ServiceProviderdata ?  */}
         <div className="min-h-screen flex flex-col">
             <nav className="bg-gradient-to-r from-purple-700 to-pink-500 p-4">
                 <div className="container mx-auto flex items-center justify-between">
@@ -21,7 +26,21 @@ export default function Home(){
                         <a href="#" className="text-white hover:text-gray-300">Home</a>
                         <a href="#" className="text-white hover:text-gray-300">About</a>
                         <a href="#" className="text-white hover:text-gray-300">Services</a>
-                        <a href={isLoggedIn ? "/logout" :"/login"} className="text-white hover:text-gray-300">{isLoggedIn ? "Logout" :"Login"} </a>
+                       {isLoggedIn?<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={async ()=>{
+                            if (isLoggedIn){
+                                const response = await axios.post('http://127.0.0.1:8000/logout/',{username:username})
+                                if(response.status === 200){
+                                    console.log("user logged out from the application")
+                                    handleLogout();
+                                    navigator('/')
+                                    
+                                }
+                            }
+
+                        }}>
+        Logout
+    </button>:
+                        <a href="/login" className="text-white hover:text-gray-300">Login </a>}
                     </div>
                     <div className="md:hidden">
                         <button onClick={toggleSidebar} className="text-white">
@@ -46,6 +65,8 @@ export default function Home(){
                 </div>
             </footer>
             </div>
-        </>
+            : 
+            {/* <ServiceProviderForm/>     } */}
+         </>
     )
 }

@@ -4,16 +4,21 @@ import userData from "../Contexts/UserContext";
 import { Await } from "react-router-dom";
 import Card from "./Card";
 import FilterBox from "./FilterBox";
+import ServiceProviderForm from "../Static Components/ServiceProviderForm";
+import SearchBox from "../Static Components/SearchBox";
+import Loading from "../Static Components/Loading";
 export default function UserHomePage() {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
-  const { username, user_id } = useContext(userData);
+  const { username, user_id,isServiceProvider,handleIsLoading,isloading } = useContext(userData);
   const [serviceProviders,setServiceProviders] = useState([])
-
+  
+  
   useEffect(() => {
   getLocation();
   getServiceProviderData();
+  // handleIsLoading()
   }, [])
  
   const getLocation = () => {
@@ -54,12 +59,16 @@ export default function UserHomePage() {
    }
   return (
     <>
-    {/* <FilterBox/> */}
-      <h1>{`latitude is ${latitude} and longitude is ${longitude} and the user is ${username}`}</h1>
+    {isloading? <Loading/>:
+      <><h1>{`latitude is ${latitude} and longitude is ${longitude} and the user is ${username}`}</h1>
+      
+      {isServiceProvider && <h1>Service Provider </h1>}
       {serviceProviders.map(item=>{
         console.log(item)
         return (<Card title={item.oraginazation_name} key={item.id} landmark={item.near_by_landmark} openingHours={item.opening_time}></Card>)
       })}
+    </>}
+      {/* <ServiceProviderForm></ServiceProviderForm> */}
     </>
   )
 }
