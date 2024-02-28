@@ -26,7 +26,28 @@ export default function Home(){
             <nav className="bg-gradient-to-r from-purple-700 to-pink-500 p-4">
                 <div className="container mx-auto flex items-center justify-between">
                     <div className="text-white text-4xl font-semibold">GW</div>
-                    {isSidebarOpen?<Sidebar toggleSidebar={CloseSidebar}/> :<div className="hidden md:flex space-x-4">
+                    {isSidebarOpen?<>
+                        <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-r from-purple-700 to-pink-500">
+            <div className="flex flex-col justify-start py-10 ">
+                <div className="flex flex-row text-white justify-evenly">
+                    <div className="absolute top-3 left-5 text-3xl" onClick={toggleSidebar}>x</div>
+                    <div className="text-5xl">GW</div></div>
+            </div>
+            <div className="text-white">
+            <ul className="flex flex-col p-4">
+        <li className="mb-2 hover:bg-violet-700 p-2 rounded-md">
+          <a href="#">Dashboard</a>
+        </li>
+        <li className="mb-2 hover:bg-violet-700 p-2 rounded-md">
+          <a href="#">Settings</a>
+        </li>
+        <li className="mb-2 hover:bg-violet-700 p-2 rounded-md">
+          <a href="#">Logout</a>
+        </li>
+      </ul>
+            </div>
+            </div>
+                    </> :<div className="hidden md:flex space-x-4">
                         <a href="#" className="text-white hover:text-gray-300">Home</a>
                         <a href="#" className="text-white hover:text-gray-300">About</a>
                         <a href="#" className="text-white hover:text-gray-300">Services</a>
