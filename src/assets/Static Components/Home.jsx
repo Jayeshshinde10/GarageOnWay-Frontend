@@ -36,21 +36,38 @@ export default function Home(){
             <div className="text-white">
             <ul className="flex flex-col p-4">
         <li className="mb-2 hover:bg-violet-700 p-2 rounded-md">
-          <a href="#">Dashboard</a>
+        <a href="/" className="text-white hover:text-gray-300">Home</a>
         </li>
         <li className="mb-2 hover:bg-violet-700 p-2 rounded-md">
-          <a href="#">Settings</a>
+        <a href="/about-us/" className="text-white hover:text-gray-300">About</a>
         </li>
         <li className="mb-2 hover:bg-violet-700 p-2 rounded-md">
-          <a href="#">Logout</a>
+        <a href="/services/" className="text-white hover:text-gray-300">Services</a>
+        </li>
+        <li className="mb-2 hover:bg-violet-700 p-2 rounded-md">
+        {isLoggedIn?<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={async ()=>{
+                            if (isLoggedIn){
+                                const response = await axios.post('http://127.0.0.1:8000/logout/',{username:username})
+                                if(response.status === 200){
+                                    console.log("user logged out from the application")
+                                    handleLogout();
+                                    navigator('/')
+                                    
+                                }
+                            }
+
+                        }}>
+        Logout
+    </button>:
+                        <a href="/login" className="text-white hover:text-gray-300">Login </a>}
         </li>
       </ul>
             </div>
             </div>
                     </> :<div className="hidden md:flex space-x-4">
-                        <a href="#" className="text-white hover:text-gray-300">Home</a>
-                        <a href="#" className="text-white hover:text-gray-300">About</a>
-                        <a href="#" className="text-white hover:text-gray-300">Services</a>
+                        <a href="/" className="text-white hover:text-gray-300">Home</a>
+                        <a href="/about-us/" className="text-white hover:text-gray-300">About</a>
+                        <a href="/services/" className="text-white hover:text-gray-300">Services</a>
                        {isLoggedIn?<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={async ()=>{
                             if (isLoggedIn){
                                 const response = await axios.post('http://127.0.0.1:8000/logout/',{username:username})
@@ -91,7 +108,6 @@ export default function Home(){
                 </div>
             </footer>
             </div>
-            : 
             {/* <ServiceProviderForm/>     } */}
          </>
     )

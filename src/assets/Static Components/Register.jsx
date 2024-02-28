@@ -102,7 +102,7 @@ export default function Register() {
   else {
     return (
       <>
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-700 to-pink-500">
           <div className="bg-white p-8 rounded shadow-md max-w-md w-full">
             <Link to={"/"} className="text-purple-700 hover:underline mb-4 flex items-center">
               <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
