@@ -5,6 +5,7 @@ import './App.css';
 import Home from './assets/Static Components/Home';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import LoginBox from './assets/Static Components/Login';
+import About from './assets/Static Components/About';
 import ContactUs from './assets/Static Components/ContactUs';
 import Register from './assets/Static Components/Register';
 import userData from './assets/Contexts/UserContext';
@@ -112,6 +113,7 @@ export default userData;
             <Route path='/contact/' element={<ContactUs></ContactUs>} />
             <Route path='/registration/' element={<Register></Register>} />
             <Route path='/UserHome/' element={<UserHomePage></UserHomePage>} />
+            <Route path='/About/' element={<About></About>}/>
           </Routes>
         </BrowserRouter>
       </userData.Provider>

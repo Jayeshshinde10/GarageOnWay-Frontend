@@ -1,49 +1,66 @@
 import React from 'react';
+import { useState } from 'react';
+import ModalForm from './ModalForm';
+const  Card = ({ title, image, about, price, openingHours, landmark, lat1, lon1, lat2, lon2}) => { 
 
-const Card = ({ title, image, about, price, openingHours, landmark, onRequestClick }) => {
-  return (
-    <div className="rounded-lg shadow-md overflow-hidden flex flex-col md:flex-row">
-      <div className="w-1/4 bg-cover bg-center" style={{ backgroundImage: `url(${'https://cdn.pixabay.com/photo/2024/02/16/15/36/recipe-8577854_1280.jpg'})` }}>
-        {/* Optional placeholder to indicate image loading or error */}
-        {/* <div className="w-full h-full bg-gray-200 animate-pulse" /> */}
-      </div>
-      <div className="p-4 flex flex-col md:flex-grow">
-        <h2 className="text-xl font-semibold mb-2">{title}</h2>
-        <p className="text-gray-600 mb-2">{about}</p>
-        <div className="flex items-center mb-1">
-          <span className="text-gray-500 mr-1">Price:</span>
-          <span className="font-semibold">{price}</span>
-        </div>
-        <div className="flex items-center mb-1">
-          <span className="text-gray-500 mr-1">Hours:</span>
-          <span>{openingHours}</span>
-        </div>
-        <div className="flex items-center mb-1">
-          <span className="text-gray-500 mr-1">Landmark:</span>
-          <span>{landmark}</span>
-        </div>
-        <button
-          className="inline-flex items-center px-2 py-1 bg-purple-600 text-white rounded-md hover:bg-purple-700 focus:ring-4 focus:ring-purple-500 focus:outline-none"
-          onClick={onRequestClick}
-        >
-          Make Request
-          <svg className="ml-1 -mr-1 w-3 h-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-            <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293z" clipRule="evenodd" />
-          </svg>
-        </button>
-        {/* book a slot button and make immediate request*/}
-        <button
-          className="inline-flex items-center px-2 py-1 bg-purple-600 text-white rounded-md hover:bg-purple-700 focus:ring-4 focus:ring-purple-500 focus:outline-none"
-          onClick={onRequestClick}
-        >
-          Book a Slot
-          <svg className="ml-1 -mr-1 w-3 h-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-            <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293z" clipRule="evenodd" />
-          </svg>
-        </button>
-      </div>
+  const [isModelOpen,setIsModelOpen] = useState(false)
+
+  function calculateDistance(lat1, lon1, lat2, lon2) {
+    // Convert latitude and longitude from degrees to radians
+    const radlat1 = Math.PI * lat1 / 180;
+    const radlon1 = Math.PI * lon1 / 180;
+    const radlat2 = Math.PI * lat2 / 180;
+    const radlon2 = Math.PI * lon2 / 180;
+
+    // Haversine formula
+    const dlat = radlat2 - radlat1;
+    const dlon = radlon2 - radlon1;
+    const a = Math.sin(dlat / 2) * Math.sin(dlat / 2) +
+              Math.cos(radlat1) * Math.cos(radlat2) *
+              Math.sin(dlon / 2) * Math.sin(dlon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    // Radius of the Earth in kilometers (change to miles if needed)
+    const R = 6371;
+
+    // Calculate the distance
+    const distance = R * c;
+
+    return distance;
+}
+const distance = calculateDistance(lat1,lon1,lat2,lon2)
+  function handleMakeRequest(){
+    console.log("function executed");
+    setIsModelOpen(true)
+    }
+    function closeModal(){
+      setIsModelOpen(false)
+    }
+return (
+  <>
+  {isModelOpen && <ModalForm isOpen={isModelOpen} closeModal={closeModal} ></ModalForm>}
+  <div className="max-w-md mx-auto bg-white rounded-md overflow-hidden shadow-md">
+    <img
+      className="w-full h-48 object-cover"
+      src={"https://cdn.pixabay.com/photo/2014/07/31/23/37/motorbike-407186_1280.jpg"} // Replace with your product image source
+      alt={title}
+    />
+    <div className="p-4">
+      <h2 className="text-xl font-semibold mb-2">{title}</h2>
+      <p className="text-gray-600 mb-2">{distance.toFixed(2)}km Far From you</p>
+      <p className="text-gray-600 mb-2">Rs.{'100'}</p>
+      <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue" onClick={()=>{handleMakeRequest(true)
+      }}>
+        Make Request
+      </button>
+      <button className="bg-blue-500 text-white px-4 m-1 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue ">
+        Book A slot
+      </button>
     </div>
-  );
+  </div>
+  </>
+);
+
 };
 
 export default Card;

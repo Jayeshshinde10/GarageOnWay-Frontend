@@ -45,7 +45,7 @@ export default function Home(){
         <a href="/services/" className="text-white hover:text-gray-300">Services</a>
         </li>
         <li className="mb-2 hover:bg-violet-700 p-2 rounded-md">
-        {isLoggedIn?<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={async ()=>{
+        {isLoggedIn?<p className="text-white" onClick={async ()=>{
                             if (isLoggedIn){
                                 const response = await axios.post('http://127.0.0.1:8000/logout/',{username:username})
                                 if(response.status === 200){
@@ -58,7 +58,7 @@ export default function Home(){
 
                         }}>
         Logout
-    </button>:
+    </p>:
                         <a href="/login" className="text-white hover:text-gray-300">Login </a>}
         </li>
       </ul>
@@ -68,7 +68,7 @@ export default function Home(){
                         <a href="/" className="text-white hover:text-gray-300">Home</a>
                         <a href="/about-us/" className="text-white hover:text-gray-300">About</a>
                         <a href="/services/" className="text-white hover:text-gray-300">Services</a>
-                       {isLoggedIn?<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={async ()=>{
+                       {isLoggedIn?<p className="text-white hover:text-gray-300" onClick={async ()=>{
                             if (isLoggedIn){
                                 const response = await axios.post('http://127.0.0.1:8000/logout/',{username:username})
                                 if(response.status === 200){
@@ -81,7 +81,7 @@ export default function Home(){
 
                         }}>
         Logout
-    </button>:
+    </p>:
                         <a href="/login" className="text-white hover:text-gray-300">Login </a>}
                     </div>
 }
