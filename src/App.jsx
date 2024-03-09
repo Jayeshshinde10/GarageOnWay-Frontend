@@ -12,6 +12,9 @@ import userData from './assets/Contexts/UserContext';
 import axios from 'axios';
 // import { useNavigate } from 'react-router-dom';
 import UserHomePage from './assets/Dynamic Components/UserHomePage';
+import BookSlot from './assets/Dynamic Components/BookSlot';
+import UserDashBoard from './assets/Dynamic Components/UserDashBoard';
+import ServiceProviderDashBoard from './assets/Dynamic Components/ServiceProviderDashBoard';
 
 export default function App(){
 const [username,setUsername] = useState('')
@@ -114,6 +117,10 @@ export default userData;
             <Route path='/registration/' element={<Register></Register>} />
             <Route path='/UserHome/' element={<UserHomePage></UserHomePage>} />
             <Route path='/About/' element={<About></About>}/>
+            <Route path='/bookSlot/' element={<BookSlot></BookSlot>}/>
+            <Route path='/userdashboard/' element={<UserDashBoard></UserDashBoard>}></Route>
+            <Route path='/serviceProviderDashboard' element={<ServiceProviderDashBoard/>}></Route>
+
           </Routes>
         </BrowserRouter>
       </userData.Provider>

@@ -7,6 +7,7 @@ import userData from '../Contexts/UserContext';
 import App from '../../App';
 
 function LoginBox() {
+  const [invalidData,setInvalidData] = useState(false)
   const [credentials, setCredentials] = useState({
     username: '',
     password: '',
@@ -16,7 +17,7 @@ function LoginBox() {
   console.log("the user is logged in or not ",)
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic here
+    //Handle form submission logic here
     axios
       .post("http://127.0.0.1:8000/gettoken/", {
         username: credentials.username,
@@ -27,9 +28,10 @@ function LoginBox() {
         localStorage.removeItem('access_token')
         localStorage.setItem('access_token', JSON.stringify(response.data.access)); 
         Navigator('/')
-        location.reload()
-        
-      });
+        location.reload() 
+      }).catch((response)=>{
+        setInvalidData(true)
+      })
   };
 
   return (
@@ -48,7 +50,7 @@ function LoginBox() {
               type="text"
               id="username"
               value={credentials.username}
-              onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+              onChange={(e) =>{setInvalidData(false);setCredentials({ ...credentials, username: e.target.value })}}
               className="w-full px-4 py-2 border rounded shadow-sm focus:outline-none focus:shadow-outline"
               placeholder="Enter your username"
             />
@@ -61,10 +63,11 @@ function LoginBox() {
               type="password"
               id="password"
               value={credentials.password}
-              onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+              onChange={(e) => {setInvalidData(false);setCredentials({ ...credentials, password: e.target.value })}}
               className="w-full px-4 py-2 border rounded shadow-sm focus:outline-none focus:shadow-outline"
               placeholder="Enter your password"
             />
+            {invalidData && <p className='text-red-600'>😅 Oops! Invalid Credentials </p>}
           </div>
           <button
             type="submit"

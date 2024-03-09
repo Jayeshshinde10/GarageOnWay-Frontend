@@ -1,8 +1,9 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from "react";
 import axios from "axios";
+
 export default function Register() {
   const [username, setUsername] = useState('')
   const [fname, setFname] = useState('');
@@ -14,7 +15,7 @@ export default function Register() {
   const [message, setMessage] = useState({ 'upperMessage': "", "lowerMessage": "" });
   const [isCreated, SetIsCreated] = useState('')
   const [isServiceProvider, setIsServiceProvider] = useState(false);
-
+  const navigator = useNavigate()
 
   const handleRadioChange = () => {
     setIsServiceProvider(!isServiceProvider);
@@ -95,9 +96,7 @@ export default function Register() {
     handleEmailExists();
   }, [email]);
   if (isCreated) {
-    return (<>
-      <h1>You Have Created Your Account SuccessFully</h1>
-    </>)
+    navigator('/UserHome')
   }
   else {
     return (
@@ -124,6 +123,7 @@ export default function Register() {
                   id="firstName"
                   className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
                   placeholder="Enter your first name"
+                  required
                 />
                 {isUserNameExist && <p className="text-red-700">😐 This Username is already registered </p>}
               </div>
@@ -142,6 +142,7 @@ export default function Register() {
                   id="firstName"
                   className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
                   placeholder="Enter your first name"
+                  required
                 />
               </div>
 
@@ -159,6 +160,7 @@ export default function Register() {
                   id="lastName"
                   className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
                   placeholder="Enter your last name"
+                  required
                 />
               </div>
 
@@ -183,6 +185,7 @@ export default function Register() {
                   Email
                 </label>
                 <input
+                required
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value)
@@ -211,6 +214,7 @@ export default function Register() {
                   id="password"
                   className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
                   placeholder="Enter your password"
+                  required
                 />
                 {message.upperMessage}
               </div>
