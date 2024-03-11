@@ -38,6 +38,10 @@ export default function Navbar(){
         <li className="mb-2 hover:bg-violet-700 p-2 rounded-md">
         <a href="/services/" className="text-white hover:text-gray-300">Services</a>
         </li>
+        {isLoggedIn &&
+        <li className="mb-2 hover:bg-violet-700 p-2 rounded-md">
+        <a href="/userdashboard" className="text-white hover:text-gray-300">Dashboard</a>
+        </li>}
         <li className="mb-2 hover:bg-violet-700 p-2 rounded-md">
         {isLoggedIn?<p className="text-white" onClick={async ()=>{
                             if (isLoggedIn){
@@ -62,6 +66,9 @@ export default function Navbar(){
                         <a href="/" className="text-white hover:text-gray-300">Home</a>
                         <a href="/about-us/" className="text-white hover:text-gray-300">About</a>
                         <a href="/services/" className="text-white hover:text-gray-300">Services</a>
+                        {isLoggedIn &&
+                        <a href="/userdashboard/" className="text-white hover:text-gray-300">Dashboard</a>
+                         }
                        {isLoggedIn?<p className="text-white hover:text-gray-300" onClick={async ()=>{
                             if (isLoggedIn){
                                 const response = await axios.post('http://127.0.0.1:8000/logout/',{username:username})

@@ -1,24 +1,35 @@
 // src/components/Dashboard.js
 import axios from 'axios';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import userData from '../Contexts/UserContext';
 const ServiceProviderDashboard = () => {
     const {username,user_id} = useContext(userData)
+    const [isloading,setIsLoading] = useState(true)
+    const [ServiceProviderOrder,setServiceProviderOrder] = useState([])
     useEffect(() => {
-      const fetchServicesData = async () => {
-        try {
-          console.log("user id is "+user_id)
-          const response = await axios.get(`http://127.0.0.1:8000/Service/${user_id}/`); // Replace with your API endpoint
-          console.log("try block executed")
-          console.log(response.data)
-          
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        } finally {
-          // setLoading(false);
-          console.log("finally block executed for serviceProvider data")
+      async function fetchServicesData(){
+        try{
+          const response = await axios.get(`http://127.0.0.1:8000/order/`)
+          if(response.status === 200){
+            console.log(response.data)
+            const filterdata = await response.data.filter((item)=>item.ServiceProvider_id === user_id)
+            console.log(filterdata)
+            setServiceProviderOrder(filterdata);
+          }
         }
-      };
+        catch(error){
+          console.log(`error is ${error.message}`)
+          setError(true)
+          setIsLoading(false)
+          console.log("error occured")
+        }
+        finally{
+          console.log(`user_id is ${username}`)
+          console.log(ServiceProviderOrder)
+           console.log("finally block executed")
+           setIsLoading(false)
+        }
+      }
   
       fetchServicesData();
     }, []);
@@ -45,6 +56,8 @@ const ServiceProviderDashboard = () => {
         {/* Content goes here */}
         <h2 className="text-2xl font-bold mb-4">Welcome {username}!</h2>
         <p>Your content goes here.</p>
+        <p>user id is {user_id}</p>
+        {ServiceProviderOrder.map((item)=><p>{item.id}</p>)}
       </div>
     </div>
   );

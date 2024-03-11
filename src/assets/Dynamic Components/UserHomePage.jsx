@@ -10,6 +10,7 @@ import Loading from "../Static Components/Loading";
 import ModelForm from "./ModalForm";
 export default function UserHomePage() {
   const navigator = useNavigate()
+  const [isLoading,setisloading] = useState(true)
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -25,6 +26,7 @@ export default function UserHomePage() {
   }, [])
   const getLocation = () => {
     try {
+      setisloading(true)
       if (navigator.geolocation) {
         const options = {
           enableHighAccuracy: true, // Set this to true for high accuracy
@@ -50,21 +52,37 @@ export default function UserHomePage() {
     } catch (error) {
       setErrorMessage(error.message);
     }
+    finally{
+      setisloading(false)
+    }
   };
    async function getServiceProviderData(){
-   const response = await axios.get('http://127.0.0.1:8000/ServiceProvider/')
-   if(response.status === 200){
-    setServiceProviders(response.data)
-    console.log("the type of serviceproviders data is "+serviceProviders)
-    console.log(response.data)
-   }  
+  try{
+    setisloading(true)
+    const response = await axios.get('http://127.0.0.1:8000/ServiceProvider/')
+    if(response.status === 200){
+      setServiceProviders(response.data)
+      console.log("the type of serviceproviders data is "+serviceProviders)
+      console.log(response.data)
+   }
+  }
+  catch(error){
+   console.log('error occured')
+   isloading(false)
+  }
+  finally{
+    console.log("error message is ")
+    console.log(errorMessage)
+  setisloading(false)
+  }  
    }
    
   return (
     <>
-    {isloading? <Loading/>:
-      <><h1>{`latitude is ${latitude} and longitude is ${longitude} and the user is ${username}`}</h1>
-      
+    {isLoading && <div className='absolute top-0 left-0 flex flex-row justify-center align-center items-center backdrop-sepia-0 h-full w-full backdrop-blur-sm z-10'>
+      <p className='text-3xl text-slate-600 drop-shadow-2xl'>Loading...</p>
+      </div>} 
+        <h1>{`latitude is ${latitude} and longitude is ${longitude} and the user is ${username}`}</h1>
       {isServiceProvider && <h1>Service Provider </h1>}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
       {serviceProviders.map(item=>{
@@ -72,8 +90,6 @@ export default function UserHomePage() {
         return (<Card key={item.id} item={item} lon1 = {longitude} lat1 = {latitude}lat2 = {item.latitude} lon2={item.longitude}></Card>)
       })}
       </div>
-    </>}
-      {/* <ServiceProviderForm></ServiceProviderForm> */}
     </>
   )
 }
