@@ -25,7 +25,7 @@ export default function ModalForm( {isOpen, closeModal, item} ){
   }, []);
    async function handleSubmit(e){
     e.preventDefault();
-    const response = await axios.put('http://127.0.0.1:8000/order/',{
+    const response = await axios.post('http://127.0.0.1:8000/order/',{
       vehicle_name:vehicleName,
       description:description,
       ServiceProvider_id:item.id,
@@ -34,7 +34,12 @@ export default function ModalForm( {isOpen, closeModal, item} ){
       is_Completed:false,
       is_paid:false,
       request_type:"immediate",
-      Service_id:1,
+      payment_time: null,
+      request_time:new Date(),
+      approaval_time:null,
+      completion_time:null,
+      organization_name:item.organization_name,
+      Service_id:null
     }); 
     console.log("request made ")// Replace with your API endpoint
     if(response.status === 201) navigator('/userdashboard')

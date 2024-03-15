@@ -126,8 +126,11 @@ export default userData;
                     const cancelResponse = await axios.patch(`http://127.0.0.1:8000/order/${item.id}/`, {
                         is_cancelled: true
                     });
+
                     console.log(`Request ${item.id} cancelled:`, cancelResponse.data);
+                    
                 }
+
             }
         } else {
             console.error("Failed to fetch data. Status code:", response.status);
