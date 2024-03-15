@@ -4,15 +4,15 @@ import { useState } from 'react';
 import axios from 'axios';
 import userData from '../Contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
-
-export default function ModalForm( {isOpen, closeModal, id} ){
+export default function ModalForm( {isOpen, closeModal, item} ){
   const [vehicleList,setVehicleList] = useState([])
   const [description,setDescription] = useState('');
   const [vehicleName,setVehicleName] = useState('');
   const [vehicleType,setVehicleType] = useState('');
-  const {user_id} = useContext(userData)
+  const {user_id,isLoggedIn} = useContext(userData)
   const navigator = useNavigate()
   useEffect(() => {
+    console.log("id is "+ item.id)
     const fetchData = async () => {
       try {
         const response = await axios.get('http://127.0.0.1:8000/vehicles/'); // Replace with your API endpoint
@@ -21,15 +21,14 @@ export default function ModalForm( {isOpen, closeModal, id} ){
         console.error('Error fetching data:', error);
       }
     };
-  
     fetchData();
   }, []);
    async function handleSubmit(e){
     e.preventDefault();
-    const response = await axios.post('http://127.0.0.1:8000/order/',{
+    const response = await axios.put('http://127.0.0.1:8000/order/',{
       vehicle_name:vehicleName,
       description:description,
-      ServiceProvider_id:4,
+      ServiceProvider_id:item.id,
       customer_id:user_id,
       is_Approved:false,
       is_Completed:false,
@@ -48,18 +47,17 @@ export default function ModalForm( {isOpen, closeModal, id} ){
         isOpen ? 'opacity-100 pointer-events-auto':'opacity-0 pointer-events-none'
       } transition-opacity duration-300 flex items-center justify-center`}
     >
-      <div className="fixed inset-0 bg-black opacity-50"></div>
-      <div className="bg-white w-full max-w-md p-4 rounded-md shadow-md z-10">
+      <div className="bg-white w-full max-w-md p-4 rounded-md shadow-md z-10  shadow-md shadow-black ">
         <div className="flex justify-end">
           <button
             onClick={closeModal}
-            className="text-gray-500 hover:text-gray-700 focus:outline-none focus:shadow-outline-blue"
+            className="text-black hover:text-gray-700 focus:outline-none focus:shadow-outline-blue text-lg"
           >
             X
           </button>
         </div>
         <div className="mt-4">
-        <form  className="max-w-md mx-auto p-6 bg-white rounded-md shadow-md" onSubmit={(e)=>handleSubmit(e)}>
+        <form  className="max-w-md mx-auto p-4 bg-white rounded-md shadow-md" onSubmit={(e)=>handleSubmit(e)}>
           {
             /*
     customer_id = models.ForeignKey(User,on_delete=models.CASCADE,default=0)
@@ -117,23 +115,7 @@ export default function ModalForm( {isOpen, closeModal, id} ){
         </datalist>
 
       </div>
-      {/* <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="country">
-          Select Vehicle Type
-        </label>
-        <select
-        required
-          id="country"
-          name="country"
-          className="w-full border-2 border-gray-300 p-2 rounded-md focus:outline-none focus:border-blue-500"
-        >
-          <option value="">Select Vehicles Type</option>
-          <option value="2 wheeler">2 wheeler</option>
-          <option value="4 wheeler">4 wheeler</option>
-          <option value="other">other</option>
-        </select>
-      </div>  */}
-      <button>Make Request</button>
+      <button className='text-center'>Make Request</button>
       </form>
         </div>
       </div>

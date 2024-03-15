@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from "react";
 import axios from "axios";
+import EmailConfirmationMessage from "./Activation";
 
 export default function Register() {
   const [username, setUsername] = useState('')
@@ -95,10 +96,10 @@ export default function Register() {
   useEffect(() => {
     handleEmailExists();
   }, [email]);
-  if (isCreated) {
-    navigator('/UserHome')
-  }
-  else {
+  // if (isCreated) {
+  //   // navigator('/activation')
+  // }
+  // else {
     return (
       <>
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-700 to-pink-500">
@@ -107,7 +108,7 @@ export default function Register() {
               <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
             </Link>
             <h2 className="text-2xl font-semibold mb-6 text-gray-800">Register</h2>
-
+            {isCreated && <EmailConfirmationMessage isCreated={isCreated}/>}
             <form onSubmit={submitForm} >
               <div className="mb-4">
                 <label htmlFor="firstName" className="block text-sm font-medium text-gray-600">
@@ -246,5 +247,5 @@ export default function Register() {
         </div>
       </>
     )
-  }
+  // }
 }

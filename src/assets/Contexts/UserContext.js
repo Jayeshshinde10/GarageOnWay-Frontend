@@ -10,6 +10,7 @@ import React from "react";
     handleLogout:()=>{},
     ServiceProviderdata:null,
     isloading:true,
-    handleIsLoading:()=>{}
+    handleIsLoading:()=>{},
+    handleCancledRequest:()=>{},
 })
 export default userData;

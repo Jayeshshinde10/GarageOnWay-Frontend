@@ -3,15 +3,17 @@ import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import Navbar from '../Static Components/Navbar'
 import userData from '../Contexts/UserContext';
+import { useNavigate } from 'react-router-dom';
 const UserDashboard = () => {
   // const array = new Array(20)
   const [userOrders,setUserOrders] = useState([])
-  const {user_id} = useContext(userData)
+  const {user_id,isLoggedIn,handleCancelledRequest} = useContext(userData)
   const [isloading,setIsLoading] = useState(true)
   const [error ,setError] = useState(false);
-
+  const navigator = useNavigate()  
   useEffect(()=>{
-
+  if(isLoggedIn === false){navigator('/login')}
+  handleCancelledRequest();
   async function getOrderData(){
     try{
       setIsLoading(true)
@@ -20,15 +22,13 @@ const UserDashboard = () => {
         const data = response.data
         setUserOrders(data);
       }
-      
-
     }
     catch(error){
       console.log(`error is ${error.message}`)
       setError(true)
     }
     finally{
-      
+      console.log("user logged in is "+ isLoggedIn)
       // const filterdata = await data.filter((item)=>item.customer_id === user_id)
       // console.log(filterdata)
       setIsLoading(false)
@@ -71,6 +71,7 @@ const UserDashboard = () => {
         {/* <h2 className="text-2xl font-bold mb-4">Welcome to the Dashboard!</h2>
         <p>Your content goes here.</p> */}
         {/* my table */}
+        
         <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
         <thead>
@@ -99,6 +100,9 @@ const UserDashboard = () => {
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
             is_Completed
             </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            is_cancelled
+            </th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
@@ -107,21 +111,24 @@ const UserDashboard = () => {
             <td className="px-6 py-4 whitespace-nowrap">{item.vehicle_name}</td>
             <td className="px-6 py-4 whitespace-nowrap">{item.id}</td>
             <td className="px-6 py-4 whitespace-nowrap">{item.customer_id}</td>
-            <td className="px-6 py-4 whitespace-nowrap">{item.ServiceProvider_id}</td>
+            <td className="px-6 py-4 whitespace-nowrap">{item.oraganization_name}</td>
             <td className="px-6 py-4 whitespace-nowrap">{item.description}</td>
             <td className="px-6 py-4 whitespace-nowrap">{item.request_type }</td>
             <td className="px-6 py-4 whitespace-nowrap">{item.is_Approved ? "approved" :"unapporved" }</td>
             <td className="px-6 py-4 whitespace-nowrap">{item.is_Completed ? "completed":"imComplete"}</td>
+            <td className="px-6 py-4 whitespace-nowrap">{item.is_cancelled ? "true" : "false" }</td>
+
           </tr>
            ))}
           {/* Add more rows as needed */}
         </tbody>
       </table>
     </div>
-        
+
       </div>
+          
     </div>  
-     
+          
     </>
   );
 };

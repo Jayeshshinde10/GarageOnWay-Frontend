@@ -1,5 +1,5 @@
 import ImageBox from "./Imagebox";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import userData from "../Contexts/UserContext";
 import UserHomePage from "../Dynamic Components/UserHomePage";
 import axios from "axios";
@@ -8,6 +8,7 @@ import ServiceProviderForm from "./ServiceProviderForm";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 export default function Home(){
+    
     const {isLoggedIn,username,handleLogin,handleLogout,ServiceProviderdata} = useContext(userData);
     console.log(" is logged in is :"+isLoggedIn)
 

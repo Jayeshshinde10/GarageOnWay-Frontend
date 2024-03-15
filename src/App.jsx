@@ -15,16 +15,19 @@ import UserHomePage from './assets/Dynamic Components/UserHomePage';
 import BookSlot from './assets/Dynamic Components/BookSlot';
 import UserDashBoard from './assets/Dynamic Components/UserDashBoard';
 import ServiceProviderDashBoard from './assets/Dynamic Components/ServiceProviderDashBoard';
+import EmailConfirmationMessage from './assets/Static Components/Activation';
 
 export default function App(){
 const [username,setUsername] = useState('')
-const [ isLoggedIn,setIsLoggedIn] = useState('')
-const [user_id,setUser_Id] = useState('')
+const [ isLoggedIn,setIsLoggedIn] = useState(null)
+const [user_id,setUser_Id] = useState(null)
 const [isServiceProvider,setServiceProvider] = useState(false)
 const [serviceproviderdata,setServiceProviderdata] = useState(false)
 const [error , setError] = useState(false)
 const [isLoading,setIsLoading] = useState(true)
 
+// Usage example:
+//const user_id = 123; // Assuming user_id is defined somewhere
 function handleIsLoading(){
 setIsLoading(false)
 }
@@ -100,7 +103,50 @@ export default userData;
       console.log("finally block")
     }
   }
-   useEffect(()=>{CheckLogin();},[isLoggedIn])
+
+   useEffect(()=>{CheckLogin();
+    handleCancelledRequest()
+    ;},[isLoggedIn])
+   
+   async function handleCancelledRequest() {
+    try {
+        const response = await axios.get('http://127.0.0.1:8000/order/');
+        if (response.status === 200) {
+            const data = response.data;
+            console.log(response.data)
+            console.log('user_id is '+ user_id)
+            const filteredData = data.filter(item => (item.customer_id === user_id )&& ((item.is_Approved === false)&& (item.is_cancelled===false)));
+            console.log("User data for cancelled requests:");
+            console.log(filteredData);
+  
+            for (const item of filteredData) {
+                const minutesDiff = getMinutesDifference(item.request_time);
+                console.log(`Minutes difference for request ${item.id}: ${minutesDiff}`);
+                if (minutesDiff >= 1) { // Cancel requests older than 1 hour
+                    const cancelResponse = await axios.patch(`http://127.0.0.1:8000/order/${item.id}/`, {
+                        is_cancelled: true
+                    });
+                    console.log(`Request ${item.id} cancelled:`, cancelResponse.data);
+                }
+            }
+        } else {
+            console.error("Failed to fetch data. Status code:", response.status);
+        }
+    } catch (error) {
+        console.error("Error fetching or processing data:", error);
+        // Handle specific errors here based on error.response.status, etc.
+    } finally {
+        console.log('Finally block executed.');
+    }
+  }
+  
+  function getMinutesDifference(requestTime) {
+    const requestDate = new Date(requestTime);
+    const now = new Date();
+    const diffInMs = Math.abs(now - requestDate);
+    return Math.floor(diffInMs / (1000 * 60));
+  }
+  
 
   return (
     <>
@@ -108,7 +154,7 @@ export default userData;
       <div className="text-white text-4xl">Loading...</div>
     </div>} */}
 
-      <userData.Provider value={{ isLoggedIn, isLoading,handleIsLoading,handleLogout,username,user_id,isServiceProvider,serviceproviderdata }}> 
+      <userData.Provider value={{ handleCancelledRequest,isLoggedIn, isLoading,handleIsLoading,handleLogout,username,user_id,isServiceProvider,serviceproviderdata }}> 
         <BrowserRouter>
           <Routes>
             <Route path="/" element= {<Home></Home>} />
@@ -120,7 +166,7 @@ export default userData;
             <Route path='/bookSlot/' element={<BookSlot></BookSlot>}/>
             <Route path='/userdashboard/' element={<UserDashBoard></UserDashBoard>}></Route>
             <Route path='/serviceProviderDashboard' element={<ServiceProviderDashBoard/>}></Route>
-
+            <Route path='/activation' element={<EmailConfirmationMessage/>}></Route>
           </Routes>
         </BrowserRouter>
       </userData.Provider>
