@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
-const ServiceProviderServices = ({user_id}) => {
+const ServiceProviderServices = ({}) => {
     const [services, setServices] = useState([]);
     const [selectedService, setSelectedService] = useState(null);
     const [isEditing, setIsEditing] = useState(false);

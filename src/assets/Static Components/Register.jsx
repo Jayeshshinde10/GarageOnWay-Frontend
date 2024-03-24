@@ -186,7 +186,7 @@ export default function Register() {
                   Email
                 </label>
                 <input
-                required
+                
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value)
@@ -196,6 +196,7 @@ export default function Register() {
                   id="email"
                   className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
                   placeholder="Enter your email"
+                  required
                 />
                 {isEmailExists && <p className="text-red-700">😐 This Email has already been registrered</p>}
 
@@ -224,6 +225,7 @@ export default function Register() {
                   Retype Password
                 </label>
                 <input
+                  required
                   onChange={(e) => recheckPassword(e)}
                   type="password"
                   id="retypePassword"

@@ -7,6 +7,7 @@ import Navbar from '../Static Components/Navbar';
 import { useNavigate } from 'react-router-dom';
 import AddServiceForm from './AddSeviceForm';
 import ServiceProviderServices from './ServicesList'
+import FormComponent from './ServiceProviderForm';
 const ServiceProviderDashboard = () => {
     const {username,user_id,isLoggedIn,se} = useContext(userData)
     const [isloading,setIsLoading] = useState(true)
@@ -62,8 +63,9 @@ const ServiceProviderDashboard = () => {
       {/* Main Content */}
       <div className="flex-1 p-8">
         {/* Content goes here */}
+        <FormComponent/>
         <AddServiceForm/>
-        <ServiceProviderServices/>
+        {/* <ServiceProviderServices/> */}
       </div>
     </div>
     </>

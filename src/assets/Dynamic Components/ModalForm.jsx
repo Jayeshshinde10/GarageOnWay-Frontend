@@ -38,9 +38,10 @@ export default function ModalForm( {isOpen, closeModal, item} ){
       request_time:new Date(),
       approaval_time:null,
       completion_time:null,
-      organization_name:item.organization_name,
+      organization_name:item.orginazation_name,
       Service_id:null
     }); 
+    console.log(item.organization_name)
     console.log("request made ")// Replace with your API endpoint
     if(response.status === 201) navigator('/userdashboard')
     else alert("an error has occured while making an request")

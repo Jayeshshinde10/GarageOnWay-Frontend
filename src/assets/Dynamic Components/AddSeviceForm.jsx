@@ -1,13 +1,44 @@
-import React, { useState, useEffect } from 'react';
-
-const AddServiceForm = ({ initialData = null, onSubmit = () => {}, onCancel }) => {
+import React, { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+import userData from '../Contexts/UserContext';
+const AddServiceForm = ({ initialData = null, 
+  // onSubmit = () => {}
+   onCancel }) => {
   const [formData, setFormData] = useState({
     name: initialData ? initialData.name : '',
     description: initialData ? initialData.description : '',
     price: initialData ? initialData.price : 400,
     vehicleType: initialData ? initialData.vehicle_type : 2,
   });
+  const [id ,setId] = useState(null)
+  const {user_id} = useContext(userData)
+  async function onSubmit(){
+      try{
 
+       const response = await axios.get('http://127.0.0.1:8000/ServiceProvider/')
+       const data = response.data.filter((item=>{if (item.user_id === user_id){
+        setId(item.id)
+       }}))
+       if (data){
+        console.log("data is :")
+        console.log(data.id)
+        const postRequest = await axios.post('http://127.0.0.1:8000/Service/',{
+          name:formData.name,
+          description:formData.description,
+          price:formData.price,
+          vehicleType:2,
+          serviceProvider_id:id,
+        })
+       }
+      }
+      catch(error){
+      console.log("the error is "+error)
+      }
+      finally{
+        console.log("finally block executed")
+      }
+          
+  }
   useEffect(() => {
     if (initialData) {
       setFormData({
@@ -25,7 +56,9 @@ const AddServiceForm = ({ initialData = null, onSubmit = () => {}, onCancel }) =
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    // console.log("function called ")
+    onSubmit();
+    // onSubmit(formData);
   };
 
   return (
@@ -92,7 +125,8 @@ const AddServiceForm = ({ initialData = null, onSubmit = () => {}, onCancel }) =
           <button
             type="submit"
             className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-          >
+            //  onSubmit={onSubmit}
+             >
             {initialData ? 'Save' : 'Add'} Service
           </button>
           {onCancel && (
