@@ -25,6 +25,7 @@ const [isServiceProvider,setServiceProvider] = useState(false)
 const [serviceproviderdata,setServiceProviderdata] = useState(false)
 const [error , setError] = useState(false)
 const [isLoading,setIsLoading] = useState(true)
+const [serviceProvider_id,setServiceProvider_id] = useState(null)
 
 // Usage example:
 //const user_id = 123; // Assuming user_id is defined somewhere
@@ -75,6 +76,7 @@ export default userData;
           setUser_Id(username.data.userid)
           setIsLoggedIn(true)
           setServiceProvider(username.data.serviceProvider)
+          if (isServiceProvider) setServiceProvider_id(username.data.serviceProvider_id)
           handleIsLoading()
           // if(isServiceProvider){
           //   const data = await axios.post('http://127.0.0.1/CheckEntryExist/',{user_id:user_id}) 
@@ -157,7 +159,7 @@ export default userData;
       <div className="text-white text-4xl">Loading...</div>
     </div>} */}
 
-      <userData.Provider value={{ handleCancelledRequest,isLoggedIn, isLoading,handleIsLoading,handleLogout,username,user_id,isServiceProvider,serviceproviderdata }}> 
+      <userData.Provider value={{ serviceProvider_id,handleCancelledRequest,isLoggedIn, isLoading,handleIsLoading,handleLogout,username,user_id,isServiceProvider,serviceproviderdata }}> 
         <BrowserRouter>
           <Routes>
             <Route path="/" element= {<Home></Home>} />

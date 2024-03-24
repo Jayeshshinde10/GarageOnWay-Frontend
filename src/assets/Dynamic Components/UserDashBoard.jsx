@@ -10,7 +10,6 @@ const UserDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
   const navigator = useNavigate();
-
   useEffect(() => {
     if (isLoggedIn===false) {
       navigator('/login');

@@ -8,9 +8,11 @@ import { useNavigate } from 'react-router-dom';
 import AddServiceForm from './AddSeviceForm';
 import ServiceProviderServices from './ServicesList'
 import FormComponent from './ServiceProviderForm';
+import ServiceProviderForm from '../Static Components/ServiceProviderForm';
+import ServicesList from './ServicesList';
 const ServiceProviderDashboard = () => {
-    const {username,user_id,isLoggedIn,se} = useContext(userData)
-    const [isloading,setIsLoading] = useState(true)
+    const {username,user_id,isLoggedIn,serviceProvider_id} = useContext(userData)
+    const [isLoading,setIsLoading] = useState(true)
     const [ServiceProviderOrder,setServiceProviderOrder] = useState([])
     const navigator = useNavigate()
     useEffect(() => {
@@ -42,7 +44,16 @@ const ServiceProviderDashboard = () => {
       fetchServicesData();
     }, []);
   return (
-    <><Navbar/>
+    
+    <>
+    
+      <Navbar/>
+      {isLoading && (
+        <div className='absolute top-0 left-0 flex flex-row justify-center align-center items-center backdrop-sepia-0 h-full w-full backdrop-blur-sm z-10'>
+          <p className='text-3xl text-slate-600 drop-shadow-2xl'>Loading...</p>
+        </div>
+      )}
+     {/* <ServiceProviderForm/> */}
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
       <div className="w-64 bg-white shadow-md p-4">
@@ -63,9 +74,10 @@ const ServiceProviderDashboard = () => {
       {/* Main Content */}
       <div className="flex-1 p-8">
         {/* Content goes here */}
-        <FormComponent/>
-        <AddServiceForm/>
-        {/* <ServiceProviderServices/> */}
+        {/* <FormComponent/>
+      */}
+      <AddServiceForm/>
+      <ServicesList/>
       </div>
     </div>
     </>

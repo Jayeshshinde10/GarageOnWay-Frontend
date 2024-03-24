@@ -9,6 +9,7 @@ import React from "react";
     isServiceProvider:null,
     handleLogout:()=>{},
     ServiceProviderdata:null,
+    serviceProvider_id:null,
     isloading:true,
     handleIsLoading:()=>{},
     handleCancledRequest:()=>{},

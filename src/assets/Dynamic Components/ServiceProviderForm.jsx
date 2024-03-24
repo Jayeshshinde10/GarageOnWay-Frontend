@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const FormComponent = () => {
+const ServiceProciderHome = () => {
   const [formData, setFormData] = useState({
     image1: null,
     image2: null,
@@ -108,4 +108,4 @@ const FormComponent = () => {
   );
 };
 
-export default FormComponent;
+export default ServiceProciderHome;

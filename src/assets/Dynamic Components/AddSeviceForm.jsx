@@ -10,32 +10,27 @@ const AddServiceForm = ({ initialData = null,
     price: initialData ? initialData.price : 400,
     vehicleType: initialData ? initialData.vehicle_type : 2,
   });
-  const [id ,setId] = useState(null)
-  const {user_id} = useContext(userData)
+  const {user_id,serviceProvider_id} = useContext(userData)
   async function onSubmit(){
       try{
-
-       const response = await axios.get('http://127.0.0.1:8000/ServiceProvider/')
-       const data = response.data.filter((item=>{if (item.user_id === user_id){
-        setId(item.id)
-       }}))
-       if (data){
-        console.log("data is :")
-        console.log(data.id)
         const postRequest = await axios.post('http://127.0.0.1:8000/Service/',{
           name:formData.name,
           description:formData.description,
           price:formData.price,
           vehicleType:2,
-          serviceProvider_id:id,
+          serviceProvider_id:serviceProvider_id,
         })
+        if(postRequest.status==201){
+          alert("Service Added. Pleas Check")
+        }
        }
-      }
       catch(error){
       console.log("the error is "+error)
+      alert("an error has occuered")
       }
       finally{
         console.log("finally block executed")
+        
       }
           
   }

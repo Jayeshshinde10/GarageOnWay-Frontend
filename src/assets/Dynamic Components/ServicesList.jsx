@@ -1,94 +1,94 @@
-import { useState } from "react";
-import axios from "axios";
-import { useEffect } from "react";
-const ServiceProviderServices = ({}) => {
-    const [services, setServices] = useState([]);
-    const [selectedService, setSelectedService] = useState(null);
-    const [isEditing, setIsEditing] = useState(false);
-  
-    useEffect(() => {
-      async function fetchServices() {
-        try {
-          const response = await axios.get(`http://127.0.0.1:8000/services/`);
-          const filterdata = response.data.filter(item=>item.serviceprovider_id===6)
-          setServices(filterdata);
+import React, { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+import userData from '../Contexts/UserContext';
 
-        } catch (error) {
-          console.error('Error fetching services:', error);
-        }
-      }
-      fetchServices();
-    }, []);
-  
-    const handleEdit = (service) => {
-      setSelectedService(service);
-      setIsEditing(true);
-    };
-  
-    const handleDelete = async (serviceId) => {
+const ServicesList = ({ id }) => {
+  const [data, setData] = useState(null);
+  const {serviceProvider_id} = useContext(userData);
+  const [isLoading,setisLoading] = useState(true)
+  // const [notificationGranted, setNotificationGranted] = useState(false);
+  const [update,setupdate] = useState(true)
+  useEffect(() => {
+    const fetchData = async () =>
+     {
       try {
-        await axios.delete(`http://127.0.0.1:8000/services/${serviceId}/`);
-        setServices(services.filter(service => service.id !== serviceId));
+        const response = await axios.get(`http://127.0.0.1:8000/Service/`);
+        const data = await response.data.filter(item=>item.serviceProvider_id === serviceProvider_id)
+        setData(data);
+        console.log("data is")
+        console.log(data)
       } catch (error) {
-        console.error('Error deleting service:', error);
+        console.error('Error fetching data:', error);
       }
-    };
-  
-    const handleSubmitEdit = async (editedService) => {
-      try {
-        await axios.patch(`http://127.0.0.1:8000/services/${editedService.id}/`, editedService);
-        setServices(services.map(service => service.id === editedService.id ? editedService : service));
-        setSelectedService(null);
-        setIsEditing(false);
-      } catch (error) {
-        console.error('Error updating service:', error);
+      finally{
+        setisLoading(false)
       }
+
     };
-  
-    return (
-      <div>
-        {isEditing ? (
-          <AddServiceForm
-            initialData={selectedService}
-            onSubmit={handleSubmitEdit}
-            onCancel={() => {
-              setSelectedService(null);
-              setIsEditing(false);
-            }}
-          />
-        ) : (
-          <div>
-            <h2 className="text-xl font-bold mb-4">Services</h2>
-            <ul>
-              {services.map(service => (
-                <li key={service.id} className="mb-4">
-                  <div>
-                    <p className="font-semibold">{service.name}</p>
-                    <p>{service.description}</p>
-                    <p>Price: ${service.price}</p>
-                    <p>Vehicle Type: {service.vehicle_type}</p>
-                  </div>
-                  <div className="mt-2">
-                    <button
-                      onClick={() => handleEdit(service)}
-                      className="mr-2 bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(service.id)}
-                      className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
-    );
-  };
-  
-  export default ServiceProviderServices;
+
+
+    fetchData();
+  }, [setupdate]);
+  async function deleteService(id){
+    setupdate(true)
+    try{
+      setisLoading(true)
+      const deletedata = await axios.delete(`http://127.0.0.1:8000/Service/${id}/`)
+      if(deletedata.status===204){
+        alert(`Service ${id} id been deleted` )
+        setupdate(true)
+      }
+    }
+    catch(error){
+      alert(`error occured while deleteing Service with ${id}!` )
+    }
+    finally{
+      setisLoading(false)
+    }
+   }
+   
+  return (
+    <>
+    {isLoading && (
+        <div className='absolute top-0 left-0 flex flex-row justify-center align-center items-center backdrop-sepia-0 h-full w-full backdrop-blur-sm z-10'>
+          <p className='text-3xl text-slate-600 drop-shadow-2xl'>Loading...</p>
+        </div>
+      )}
+    <div className="container mx-auto p-4">
+      {data ? (
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">id</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vehicle Type</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service Provider ID</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+      {data.map(data=>
+                  <tr key={data.id}>
+                <td className="px-6 py-4 whitespace-nowrap">{data.id}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{data.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{data.description}</td>
+                <td className="px-6 py-4 whitespace-nowrap">RS.{data.price}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{data.vehicle_type}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{data.serviceProvider_id}</td>
+                <td className="px-6 py-4 whitespace-nowrap"><button className='bg-red-700 p-2 rounded text-white font-semibold' onClick={(e)=>{deleteService(data.id)}}>DELETE</button></td>
+              </tr>)}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p>Loading...</p>
+      )}
+    </div>
+    </>
+  );
+};
+
+export default ServicesList;
