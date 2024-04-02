@@ -1,158 +1,246 @@
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import React, { useContext, useEffect, useState } from 'react';
+import Chart from 'chart.js/auto';
 import Navbar from '../Static Components/Navbar';
 import userData from '../Contexts/UserContext';
-import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+const API_URL = 'http://127.0.0.1:8000/order'; // Replace with your API endpoint
 
-const UserDashboard = () => {
-  const { user_id, isLoggedIn, handleCancelledRequest } = useContext(userData);
-  const [userOrders, setUserOrders] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const navigator = useNavigate();
-  useEffect(() => {
-    if (isLoggedIn===false) {
-      navigator('/login');
-    }
-    handleCancelledRequest();
-    async function getOrderData() {
-      try {
-        setIsLoading(true);
-        const response = await axios.get(`http://127.0.0.1:8000/order/`);
-        if (response.status === 200) {
-          const data = response.data;
-          setUserOrders(data);
-        }
-      } catch (error) {
-        console.log(`error is ${error.message}`);
-        setError(true);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    getOrderData();
-  }, [isLoggedIn, navigator, handleCancelledRequest]);
-
-  const handleOrderCompletion = async (orderId) => {
-    const isCompleted = window.confirm('Has the order been completed?');
-    if (isCompleted) {
-      try {
-        await axios.patch(`http://127.0.0.1:8000/order/${orderId}/`, { is_Completed: true, completion_time: new Date() });
-        // Optionally, perform additional actions after marking the order as completed
-        // Refresh order data
-        window.location.reload();
-      } catch (error) {
-        console.error('Error updating order status:'+ error);
-      }
-    }
+function UserDashBoard() {
+ const [data, setData] = useState([]);
+ const [error, setError] = useState(null);
+ const [isLoading, setIsLoading] = useState(false);
+ const [currentUser] = useState({ id: 1 ,isAdmin:true}); // Replace with actual user info retrieval
+ const [selectedRequestId, setSelectedRequestId] = useState(null);
+ const {user_id} = useContext(userData)
+ useEffect(() => {
+  const fetchData = async () => {
+   setIsLoading(true);
+   try {
+    const response = await axios.get(API_URL);
+    const filterdata = response.data.filter((item)=>item.customer_id ===user_id)
+    setData(response.data);
+   } catch (error) {
+    setError(error);
+   } finally {
+    setIsLoading(false);
+   }
   };
 
-  const handleOrderCancellation = async (orderId) => {
-    const isCancelled = window.confirm('Are you sure you want to cancel this request?');
-    if (isCancelled) {
-      try {
-        await axios.patch(`http://127.0.0.1:8000/order/${orderId}/`, { is_cancelled: true, completion_time: new Date() });
-        // Optionally, perform additional actions after cancelling the order
-        // Refresh order data
-        window.location.reload();
-      } catch (error) {
-        console.error('Error cancelling order:', error);
-      }
-    }
-  };
+  fetchData();
+ }, []);
 
-  if (error) {
-    return <p>Error occurred</p>;
+ const getRequestStatus = (request) => {
+  if (request.is_cancelled) return 'Cancelled';
+  if (!request.is_Approved) return 'Pending Approval';
+  if (!request.is_Completed && request.is_Approved) return 'Pending Completion';
+  if (!request.is_paid && request.is_Completed && request.is_Approved) return 'Pending Payment';
+  return 'Completed';
+ };
+
+ const getStatusColor = (status) => {
+  switch (status) {
+   case 'Cancelled':
+    return 'bg-red-500 text-white';
+   case 'Pending Approval':
+    return 'bg-yellow-500 text-black';
+   case 'Pending Completion':
+   case 'Pending Payment':
+    return 'bg-blue-500 text-white';
+   case 'Completed':
+    return 'bg-green-500 text-white';
+   default:
+    return 'bg-gray-200 text-black';
   }
+ };
 
-  return (
-    <>
-      <Navbar />
-      {isLoading && (
-        <div className='absolute top-0 left-0 flex flex-row justify-center align-center items-center backdrop-sepia-0 h-full w-full backdrop-blur-sm z-10'>
-          <p className='text-3xl text-slate-600 drop-shadow-2xl'>Loading...</p>
-        </div>
-      )}
-      <div className='overflow-x-auto w-full'>
-        <table className='min-w-full divide-y divide-gray-200'>
-          <thead>
-          <tr>
-              <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                Vehicle Name
-              </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                ID
-              </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                Customer ID
-              </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                Organization Name
-              </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                Description
-              </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                Request Type
-              </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                Approved
-              </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                Completed
-              </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                Cancelled
-              </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody className='bg-white divide-y divide-gray-200'>
-            {userOrders
-              .filter((item) => item.customer_id === user_id)
-              .map((item) => (
-                <tr key={item.id}>
-                  <td className='px-6 py-4 whitespace-nowrap'>{item.vehicle_name}</td>
-                  <td className='px-6 py-4 whitespace-nowrap'>{item.id}</td>
-                  <td className='px-6 py-4 whitespace-nowrap'>{item.customer_id}</td>
-                  <td className='px-6 py-4 whitespace-nowrap'>{item.organization_name}</td>
-                  <td className='px-6 py-4 whitespace-nowrap'>{item.description}</td>
-                  <td className='px-6 py-4 whitespace-nowrap'>{item.request_type}</td>
-                  <td className='px-6 py-4 whitespace-nowrap'>{item.is_Approved ? 'Approved' : 'Unapproved'}</td>
-                  <td className='px-6 py-4 whitespace-nowrap'>{item.is_Completed ? 'Completed' : 'Incomplete'}</td>
-                  <td className='px-6 py-4 whitespace-nowrap'>{item.is_cancelled ? 'True' : 'False'}</td>
-                  <td>
-                    {/* Render action buttons based on order status */}
-                    {!item.is_cancelled && (
-                      <div className='flex space-x-2'>
-                        {item.is_Approved && !item.is_Completed && (
-                          <button
-                            onClick={() => handleOrderCompletion(item.id)}
-                            className='bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md'
-                          >
-                            Mark as Completed
-                          </button>
-                        )}
-                        {!item.is_Approved && (
-                          <button
-                            onClick={() => handleOrderCancellation(item.id)}
-                            className='bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md'
-                          >
-                            Cancel Request
-                          </button>
-                        )}
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-      </div>
-    </>
-  );
-};
+ const handleCancelRequest = async (requestId) => {
+  try {
+   const response = await axios.patch(`${API_URL}/${requestId}`, {
+    is_cancelled: true,
+    unapproval_time: new Date().toISOString(),
+   });
+   setData(data.map((request) => (request.id === requestId ? response.data : request)));
+  } catch (error) {
+   console.error('Error cancelling request:', error);
+  }
+ };
 
-export default UserDashboard;
+ const handleCompleteRequest = async (requestId) => {
+  try {
+   const response = await axios.patch(`${API_URL}/${requestId}/`, {
+    is_Completed: true,
+    completion_time: new Date().toISOString(),
+   });
+   setData(data.map((request) => (request.id === requestId ? response.data : request)));
+  } catch (error) {
+   console.error('Error completing request:', error);
+  }
+ };
+
+ // Handle payment (simulation for now)
+ const handlePayNow = async (requestId) => {
+  try {
+   console.log(`Simulating payment for request ${requestId}`);
+   const response = await axios.patch(`${API_URL}/${requestId}/`, {
+    is_paid: true,
+    payment_time: new Date().toISOString(),
+   });
+   setData(data.map((request) => (request.id === requestId ? response.data : request)));
+  } catch (error) {
+   console.error('Error marking payment:', error);
+  }
+ };
+
+ const handleRecordClick = (requestId) => {
+  setSelectedRequestId(requestId === selectedRequestId ? null : requestId);
+ };
+
+ // Chart.js code for request status distribution
+ useEffect(() => {
+  const ctx = document.getElementById('requestStatusChart');
+  const requestStatusChart = new Chart(ctx, {
+   type: 'pie',
+   data: {
+    labels: getRequestStatusLabels(data),
+    datasets: [
+     {
+      label: 'Request Status Distribution',
+      data: getRequestStatusCounts(data),
+      backgroundColor: [
+       'rgba(255, 99, 132, 0.6)', // Red
+       'rgba(54, 162, 235, 0.6)', // Blue
+       'rgba(255, 206, 86, 0.6)', // Yellow
+       'rgba(75, 192, 192, 0.6)', // Green
+       'rgba(153, 102, 255, 0.6)', // Purple
+       'rgba(255, 159, 64, 0.6)', // Orange
+       'rgba(72, 209, 204, 0.6)', // Turquoise
+      ],
+      borderColor: [
+       'rgba(255, 99, 132, 1)',
+       'rgba(54, 162, 235, 1)',
+       'rgba(255, 206, 86, 1)',
+       'rgba(75, 192, 192, 1)',
+       'rgba(153, 102, 255, 1)',
+       'rgba(255, 159, 64, 1)',
+       'rgba(72, 209, 204, 1)',
+      ],
+      borderWidth: 1,
+     },
+    ],
+   },
+   options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    legend: {
+     display: true,
+     position: 'bottom',
+    },
+    tooltips: {
+     enabled: true,
+     callbacks: {
+      label: (context) => `${context.label}: ${context.dataset.data[context.dataIndex]}`,
+     },
+    },
+   },
+  });
+
+  return () => {
+   requestStatusChart.destroy();
+  };
+ }, [data]);
+
+ const getRequestStatusLabels = (data) => {
+  const uniqueStatuses = new Set(data.map((request) => getRequestStatus(request)));
+  return Array.from(uniqueStatuses); // Convert Set to an array for Chart.js
+ };
+
+ const getRequestStatusCounts = (data) => {
+  const statusCounts = {};
+  data.forEach((request) => {
+   const status = getRequestStatus(request);
+   statusCounts[status] = (statusCounts[status] || 0) + 1;
+  });
+  return Object.values(statusCounts); // Extract counts as an array
+ };
+
+ return (
+  <>
+  <Navbar/>
+  <div className="container mx-auto px-4 py-8">
+   {error && <div className="alert alert-danger" role="alert">{error.message}</div>}
+    
+   {isLoading && <div>Loading data...</div>}
+
+   <h2>Request Status Summary</h2>
+   <div className="mb-4">
+    <canvas id="requestStatusChart" width="400" height="400"></canvas>
+   </div>
+
+   {data.length > 0 && (
+    <div className="overflow-x-auto shadow rounded-lg">
+     <table className="table-auto w-full">
+      <thead>
+       <tr className="bg-gray-500 text-white">
+        <th className="px-4 py-2">Request ID</th>
+        <th className="px-4 py-2">Description</th>
+        <th className="px-4 py-2">Status</th>
+        <th className="px-4 py-2">Service Provider ID</th>
+        <th className="px-4 py-2">Request Type</th>
+        <th className="px-4 py-2">Estimated Completion</th>
+        <th className="px-4 py-2">Amount</th>
+        {currentUser.isAdmin && <th className="px-4 py-2">Actions</th>}
+       </tr>
+      </thead>
+      <tbody>
+       {data.map((request) => (
+        <tr
+         key={request.id}
+         className={selectedRequestId === request.id ? 'bg-gray-100' : ''}
+         onClick={() => handleRecordClick(request.id)}
+        >
+         <td className="px-4 py-2">{request.id}</td>
+         <td className="px-4 py-2">{request.description}</td>
+         <td className={`px-4 py-2 ${getStatusColor(getRequestStatus(request))}`}>
+          {getRequestStatus(request)}
+         </td>
+         <td className="px-4 py-2">{request.ServiceProvider_id}</td>
+         <td className="px-4 py-2">{request.request_type}</td>
+         <td className="px-4 py-2">{request.estimated_completion}</td>
+         <td className="px-4 py-2">{request.request_type==='immediate'? request.is_cancelled ?"NA":'To be decided':` RS ${request.price}`}</td>
+         {currentUser.isAdmin && (
+          <td className="px-4 py-2">
+            {getRequestStatus(request) === 'Cancelled' && (
+            <button className="btn btn-sm btn-danger">
+             No actions
+            </button>
+           )}
+            {getRequestStatus(request) === 'Pending Approval' && (
+            <button className="btn btn-sm btn-danger rounded-sm" onClick={() => handleCancelRequest(request.id)}>
+             Cancel
+            </button>
+           )}
+           {getRequestStatus(request) === 'Pending Completion' && (
+            <button className="btn btn-sm btn-primary rounded-sm" onClick={() => handleCompleteRequest(request.id)}>
+             Mark Complete
+            </button>
+           )}
+           {getRequestStatus(request) === 'Pending Payment' && (
+            <button className="btn btn-sm btn-info bg-emerald-400 p-2 rounded-sm" onClick={() => handlePayNow(request.id)}>
+             Pay Now
+            </button>
+           )}
+          </td>
+         )}
+        </tr>
+       ))}
+      </tbody>
+     </table>
+    </div>
+   )}
+  </div>
+  </>
+ );
+}
+
+export default UserDashBoard;
