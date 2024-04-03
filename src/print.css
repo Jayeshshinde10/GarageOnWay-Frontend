@@ -1,0 +1,30 @@
+@media print {
+    body * {
+      visibility: hidden;
+    }
+    .receipt-container,
+    .receipt-container * {
+      visibility: visible;
+    }
+  
+    /* Additional print-specific styles for your receipt */
+    .receipt-container {
+      font-size: 14px; /* Adjust for readability */
+      margin: 20px;    /* Adjust for page margins */
+    }
+    .receipt-header {
+      text-align: center;
+    }
+    .receipt-body ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .receipt-body li {
+      margin-bottom: 10px;
+    }
+    .receipt-footer {
+      text-align: right;
+    }
+  }
+  

@@ -38,13 +38,13 @@ export default function BookSlot() {
           <section className="flex flex-col md:flex-row items-center">
             <img src={data.image1} alt="Welcome to Shopping App" className="w-full md:w-1/2 rounded-lg mb-4 md:mb-0" />
             <div className="w-full md:w-1/2 ml-0 md:ml-4 text-left">
-              <h2 className="text-2xl font-bold mb-4">Welcome to a World of Shopping</h2>
+              <h2 className="text-2xl font-bold mb-4">Welcome To {data.orginazation_name}</h2>
               <p className="text-gray-200 text-lg">Discover a wide variety of Vehicle Services at cheap and affordable Rates</p>
             </div>
           </section>
           <hr className="my-8 border-gray-200" />
           <h3 className="text-xl font-bold mb-4 text-white">What {data.orginazation_name} provide 🚗</h3>
-          <ServiceComponent serviceprovider_id={data.id}/>
+          <ServiceComponent serviceprovider_id={data.id} orginazation_name={data.orginazation_name}/>
         </main>
       </div>
     </>

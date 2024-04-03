@@ -94,7 +94,7 @@ export default function ModalForm( {isOpen, closeModal, item} ){
           name="message"
           rows="4"
           required
-          className="w-full border-2 border-gray-300 p-2 rounded-md resize-none focus:outline-none focus:border-blue-500"
+          className="w-full border-2 border-black p-2 rounded-md resize-none focus:outline-none focus:border-blue-500"
         ></textarea>
       </div>
       <div className="mb-4">
@@ -108,7 +108,7 @@ export default function ModalForm( {isOpen, closeModal, item} ){
           name="name"
           placeholder="Type to search"
           required
-          className="w-full border-2 border-gray-300 p-2 rounded-md focus:outline-none focus:border-blue-500"
+          className="w-full border-2 border-black p-2 rounded-md focus:outline-none focus:border-blue-500"
           value={vehicleName}
           onChange={(e)=>{setVehicleName(e.target.value)}}
         />
@@ -121,7 +121,7 @@ export default function ModalForm( {isOpen, closeModal, item} ){
         </datalist>
 
       </div>
-      <button className='text-center'>Make Request</button>
+      <button className='text-center bg-cyan-600 p-2 m-1 rounded'>Make Request</button>
       </form>
         </div>
       </div>

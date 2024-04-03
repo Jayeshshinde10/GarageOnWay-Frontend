@@ -20,7 +20,7 @@
 //     getLocation();
 //     fetchServicesData();
 //   },[])
-  
+
 //   const getLocation = () => {
 //     if (!navigator.geolocation) {
 //       setError("Geolocation is not supported by your browser");
@@ -94,14 +94,17 @@
 //   </div>
 // </div>
 //     </>
-  
+
 //   )
 // }
+
+import PrintableReceipt from './PrintReciept';
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import Chart from 'chart.js/auto';
 import Navbar from '../Static Components/Navbar';
 import userData from '../Contexts/UserContext';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const API_URL = 'http://127.0.0.1:8000/order'; // Replace with your API endpoint
 
@@ -110,14 +113,21 @@ function ServiceProviderDashBoard() {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [currentUser] = useState({ id: 1, isAdmin: false }); // Service provider by default
-  const { user_id,serviceProvider_id } = useContext(userData);
-
+  const { user_id,isLoggedIn,serviceProvider_id} = useContext(userData);
+  const navigate = useNavigate()
   const [selectedRequestId, setSelectedRequestId] = useState(null);
   const [newPrice, setNewPrice] = useState(null); // For immediate requests
 
   useEffect(() => {
+    if(isLoggedIn === false){
+      navigate('/login')
+  }
+  // if(!serviceProvider_id ){
+  //   navigate("/")
+  // }
     const fetchData = async () => {
       setIsLoading(true);
+      console.log("service provider id is "+ serviceProvider_id)
       try {
         const response = await axios.get(API_URL);
         const filteredData = response.data.filter(
@@ -132,7 +142,7 @@ function ServiceProviderDashBoard() {
     };
 
     fetchData();
-  }, [user_id]);
+  }, [serviceProvider_id]);
 
   const getRequestStatus = (request) => {
     if (request.is_cancelled) return 'Cancelled';
@@ -161,9 +171,8 @@ function ServiceProviderDashBoard() {
 
   const handleCancelRequest = async (requestId) => {
     try {
-      const response = await axios.patch(`${API_URL}/${requestId}`, {
+      const response = await axios.patch(`${API_URL}/${requestId}/`, {
         is_cancelled: true,
-        unapproval_time: new Date().toISOString(),
       });
       setData(data.map((request) => (request.id === requestId ? response.data : request)));
     } catch (error) {
@@ -215,6 +224,7 @@ function ServiceProviderDashBoard() {
       const response = await axios.patch(`${API_URL}/${requestId}/`, {
         is_paid: true,
         payment_time: new Date().toISOString(),
+        payment_mode:"offline"
       });
       setData(data.map((request) => (request.id === requestId ? response.data : request)));
     } catch (error) {
@@ -321,7 +331,6 @@ function ServiceProviderDashBoard() {
                   <th className="px-4 py-2">Status</th>
                   <th className="px-4 py-2">Customer ID</th>
                   <th className="px-4 py-2">Request Type</th>
-                  <th className="px-4 py-2">Estimated Completion</th>
                   <th className="px-4 py-2">Amount</th>
                   <th className="px-4 py-2">Actions</th>
                 </tr>
@@ -340,15 +349,17 @@ function ServiceProviderDashBoard() {
                     </td>
                     <td className="px-4 py-2">{request.customer_id}</td>
                     <td className="px-4 py-2">{request.request_type}</td>
-                    <td className="px-4 py-2">{request.estimated_completion}</td>
                     <td className="px-4 py-2">
-                      {request.request_type === 'immediate'
-                        ? request.is_cancelled
-                          ? 'NA'
-                          : request.price
-                            ? `₹${request.price}`
-                            : 'To be decided'
-                        : `₹${request.price}`}
+                      {
+                        request.request_type === 'immediate'
+                          ? request.is_cancelled
+                            ? 'NA'
+                            : request.price
+                              ? `₹${request.price}`
+                              : 'To be decided'
+                          : `₹${request.price}`
+                      }
+
                     </td>
                     <td className="px-4 py-2">
                       {getRequestStatus(request) === 'Cancelled' && (
@@ -357,16 +368,25 @@ function ServiceProviderDashBoard() {
                         </button>
                       )}
                       {getRequestStatus(request) === 'Pending Approval' && (
-                        <button
-                          className="btn btn-sm btn-danger rounded-sm"
-                          onClick={() => handleCancelRequest(request.id)}
-                        >
-                          Cancel
-                        </button>
+                        <>
+                          <button
+                            className=" text-white btn btn-sm btn-danger rounded-sm bg-red-500 p-2 m-1"
+                            onClick={() => handleCancelRequest(request.id)}
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            className=" text-white btn btn-sm btn-danger bg-green-600 rounded-sm p-2 m-1"
+                            onClick={() => handleApproveRequest(request.id)}
+                          >
+                            Approve
+                          </button>
+
+                        </>
                       )}
                       {getRequestStatus(request) === 'Pending Completion' && (
                         <button
-                          className="btn btn-sm btn-primary rounded-sm"
+                          className="btn btn-sm btn-primary rounded-sm bg-blue p-2 m-2"
                           onClick={() => handleCompleteRequest(request.id)}
                         >
                           Mark Complete
@@ -377,7 +397,7 @@ function ServiceProviderDashBoard() {
                           className="btn btn-sm btn-info bg-emerald-400 p-2 rounded-sm"
                           onClick={() => handleMarkPaid(request.id)}
                         >
-                          Mark Paid
+                          Paid Offline
                         </button>
                       )}
                       {request.request_type === 'immediate' &&
@@ -392,6 +412,9 @@ function ServiceProviderDashBoard() {
                             />
                           </div>
                         )}
+                        {getRequestStatus(request) === 'Completed' && (
+            <PrintableReceipt receiptData={request}/>
+           )}
                     </td>
                   </tr>
                 ))}
@@ -406,4 +429,3 @@ function ServiceProviderDashBoard() {
 
 export default ServiceProviderDashBoard;
 
-  

@@ -19,7 +19,7 @@ export default function UserHomePage(){
   const [errorMessage, setErrorMessage] = useState(null);
   const { username, user_id,isServiceProvider,handleIsLoading,isloading } = useContext(userData);
   const [serviceProviders,setServiceProviders] = useState([])
-  const [distance, setDistance] = useState('2 kilometers');
+  const [distance, setDistance] = useState(2);
   const [shopName, setShopName] = useState('');
   const [rating, setRating] = useState('');
 //   const location = useLocation();
@@ -165,28 +165,11 @@ export default function UserHomePage(){
           </div>
     
           {/* Rating Filter Select */}
-          <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Filter by Rating
-            </label>
-            <select
-              className="w-full md:w-24 px-4 py-2 border rounded-md"
-              value={rating}
-              onChange={(e) => setRating(e.target.value)}
-            >
-              <option value="">All Ratings</option>
-              <option value="5">5 stars</option>
-              <option value="4">4 stars</option>
-              <option value="3">3 stars</option>
-              <option value="2">2 stars</option>
-              <option value="1">1 star</option>
-            </select>
-          </div>
         </form></>
-            <h1>{`latitude is ${latitude} and longitude is ${longitude} and the user is ${username} and userid is ${user_id}`}</h1>
+            {/*<h1>{`latitude is ${latitude} and longitude is ${longitude} and the user is ${username} and userid is ${user_id}`}</h1>*/}
           {isServiceProvider && <h1>Service Provider </h1>}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-          {serviceProviders.filter(item=>item.orginazation_name.includes(shopName)).map(item=>{
+          {serviceProviders.filter(item=>item.orginazation_name.includes(shopName)).filter(item=>item.distance<=distance).map(item=>{
             console.log(item)
             return (<Card key={item.id} item={item} lon1 = {longitude} lat1 = {latitude} lat2 = {item.latitude} lon2={item.longitude}></Card>)
           })}

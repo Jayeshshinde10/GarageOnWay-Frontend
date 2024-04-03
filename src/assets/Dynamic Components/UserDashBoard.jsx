@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Chart from 'chart.js/auto';
 import Navbar from '../Static Components/Navbar';
+import PaymentModal from './PaymentModal';
 import userData from '../Contexts/UserContext';
 import { useContext } from 'react';
+import PrintableReceipt from './PrintReciept';
 const API_URL = 'http://127.0.0.1:8000/order'; // Replace with your API endpoint
 
 function UserDashBoard() {
@@ -13,6 +15,9 @@ function UserDashBoard() {
  const [currentUser] = useState({ id: 1 ,isAdmin:true}); // Replace with actual user info retrieval
  const [selectedRequestId, setSelectedRequestId] = useState(null);
  const {user_id} = useContext(userData)
+ const [ismodelopen,setismodelopen] = useState(false)
+ const [isprintopen,setisprintopen] = useState(false)
+ 
  useEffect(() => {
   const fetchData = async () => {
    setIsLoading(true);
@@ -56,9 +61,8 @@ function UserDashBoard() {
 
  const handleCancelRequest = async (requestId) => {
   try {
-   const response = await axios.patch(`${API_URL}/${requestId}`, {
+   const response = await axios.patch(`${API_URL}/${requestId}/`, {
     is_cancelled: true,
-    unapproval_time: new Date().toISOString(),
    });
    setData(data.map((request) => (request.id === requestId ? response.data : request)));
   } catch (error) {
@@ -85,6 +89,8 @@ function UserDashBoard() {
    const response = await axios.patch(`${API_URL}/${requestId}/`, {
     is_paid: true,
     payment_time: new Date().toISOString(),
+    payment_mode:"online"
+
    });
    setData(data.map((request) => (request.id === requestId ? response.data : request)));
   } catch (error) {
@@ -187,7 +193,6 @@ function UserDashBoard() {
         <th className="px-4 py-2">Status</th>
         <th className="px-4 py-2">Service Provider ID</th>
         <th className="px-4 py-2">Request Type</th>
-        <th className="px-4 py-2">Estimated Completion</th>
         <th className="px-4 py-2">Amount</th>
         {currentUser.isAdmin && <th className="px-4 py-2">Actions</th>}
        </tr>
@@ -206,8 +211,7 @@ function UserDashBoard() {
          </td>
          <td className="px-4 py-2">{request.ServiceProvider_id}</td>
          <td className="px-4 py-2">{request.request_type}</td>
-         <td className="px-4 py-2">{request.estimated_completion}</td>
-         <td className="px-4 py-2">{request.request_type==='immediate'? request.is_cancelled ?"NA":'To be decided':` RS ${request.price}`}</td>
+         <td className="px-4 py-2">{request.is_cancelled ?"NA":request.type==='immediate'?"To be decided":request.price? "RS. "+request.price:""}</td>
          {currentUser.isAdmin && (
           <td className="px-4 py-2">
             {getRequestStatus(request) === 'Cancelled' && (
@@ -216,20 +220,26 @@ function UserDashBoard() {
             </button>
            )}
             {getRequestStatus(request) === 'Pending Approval' && (
-            <button className="btn btn-sm btn-danger rounded-sm" onClick={() => handleCancelRequest(request.id)}>
+            <button className="btn btn-sm btn-danger font-medium rounded text-white bg-red-600 p-2 m-2" onClick={() => handleCancelRequest(request.id)}>
              Cancel
             </button>
            )}
            {getRequestStatus(request) === 'Pending Completion' && (
-            <button className="btn btn-sm btn-primary rounded-sm" onClick={() => handleCompleteRequest(request.id)}>
+            <button className="btn btn-sm btn-primary rounded-sm font-medium rounded-sm text-white bg-cyan-200 p-2 m-2" onClick={() => handleCompleteRequest(request.id)}>
              Mark Complete
             </button>
            )}
            {getRequestStatus(request) === 'Pending Payment' && (
-            <button className="btn btn-sm btn-info bg-emerald-400 p-2 rounded-sm" onClick={() => handlePayNow(request.id)}>
+            <button className="btn btn-sm btn-info bg-emerald-400 font-medium p-2 rounded-sm" onClick={() => setismodelopen(true)}>
              Pay Now
             </button>
            )}
+           {getRequestStatus(request) === 'Completed' && (
+            <PrintableReceipt receiptData={request}/>
+           )}
+           {ismodelopen &&
+           <PaymentModal handlepaynow = {handlePayNow} setmodel = {setismodelopen} requestId={request.id} isActive={ismodelopen} />
+           }
           </td>
          )}
         </tr>
@@ -239,6 +249,7 @@ function UserDashBoard() {
     </div>
    )}
   </div>
+  
   </>
  );
 }

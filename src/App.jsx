@@ -16,6 +16,7 @@ import BookSlot from './assets/Dynamic Components/BookSlot';
 import UserDashBoard from './assets/Dynamic Components/UserDashBoard';
 import ServiceProviderDashBoard from './assets/Dynamic Components/ServiceProviderDashBoard';
 import EmailConfirmationMessage from './assets/Static Components/Activation';
+import ServiceProviderServices from './assets/Dynamic Components/ServiceProviderServices';
 
 export default function App() {
   const [username, setUsername] = useState('')
@@ -174,8 +175,9 @@ export default function App() {
             <Route path='/About/' element={<About></About>} />
             <Route path='/bookSlot/' element={<BookSlot></BookSlot>} />
             <Route path='/userdashboard/' element={<UserDashBoard></UserDashBoard>}></Route>
-            <Route path='/serviceProviderDashboard' element={<ServiceProviderDashBoard />}></Route>
+            <Route path='/serviceProviderDashboard/' element={<ServiceProviderDashBoard />}></Route>
             <Route path='/activation' element={<EmailConfirmationMessage />}></Route>
+            <Route path='/serviceProviderHome' element={<ServiceProviderServices/>}></Route>
           </Routes>
         </BrowserRouter>
       </userData.Provider>

@@ -3,7 +3,6 @@ import userData from "../Contexts/UserContext";
 import Navbar from "../Static Components/Navbar";
 import { useNavigate } from 'react-router-dom';
 import AddServiceForm from './AddSeviceForm';
-import ServiceProviderServices from './ServicesList';
 import ServiceProviderForm from './ServiceProviderForm';
 import ServicesList from './ServicesList';
 import axios from "axios";
@@ -16,6 +15,9 @@ export default function ServiceProviderServices(){
     const [serviceProviderOrder, setServiceProviderOrder] = useState([]);
     const navigate = useNavigate()
     useEffect(()=>{
+        if(isLoggedIn ===false){
+            navigate('/login')
+        }
       getLocation();
       fetchServicesData();
     },[])

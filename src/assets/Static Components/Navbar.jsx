@@ -13,7 +13,7 @@ export default function Navbar(){
     function CloseSidebar(){
         isSidebarOpen(false)
     }
-    const {isLoggedIn,username,handleLogin,handleLogout,ServiceProviderdata} = useContext(userData);
+    const {isLoggedIn,username,handleLogin,handleLogout,ServiceProviderdata,serviceProvider_id} = useContext(userData);
     console.log(" is logged in is :"+isLoggedIn) 
     return(
         <>
@@ -63,11 +63,17 @@ export default function Navbar(){
             </div>
             </div>
                     </> :<div className="hidden md:flex space-x-4">
-                        <a href="/" className="text-white hover:text-gray-300">Home</a>
+                        
+                    
+                        {!isLoggedIn &&
+                        <>
+                        <a href={"/"} className="text-white hover:text-gray-300">Home</a>
                         <a href="/about-us/" className="text-white hover:text-gray-300">About</a>
-                        <a href="/services/" className="text-white hover:text-gray-300">Services</a>
-                        {isLoggedIn &&
-                        <a href="/userdashboard/" className="text-white hover:text-gray-300">Dashboard</a>
+                        <a href="/services/" className="text-white hover:text-gray-300">Services</a> </>}
+                        {isLoggedIn && <>
+                        <a href ={serviceProvider_id ? "/serviceProviderHome/":"/UserHome/"} className="text-white hover:text-gray-300">Home</a>
+                        <a href ={serviceProvider_id ? "/serviceProviderDashboard/":"/userdashboard/"} className="text-white hover:text-gray-300">Dashboard</a>
+                        </>
                          }
                        {isLoggedIn?<p className="text-white hover:text-gray-300" onClick={async ()=>{
                             if (isLoggedIn){

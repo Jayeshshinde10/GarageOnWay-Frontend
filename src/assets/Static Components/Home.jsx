@@ -54,7 +54,7 @@ export default function Home(){
             console.log("latitude is "+latitude)
             if(isLoggedIn){
             if (isServiceProvider){
-                navigate("/serviceProviderDashboard",{state:location});
+                navigate("/serviceProviderHome",{state:location});
             } else {
                 navigate("/UserHome/",{state:location});
             } 
