@@ -73,6 +73,7 @@ export default function Navbar(){
                         {isLoggedIn && <>
                         <a href ={serviceProvider_id ? "/serviceProviderHome/":"/UserHome/"} className="text-white hover:text-gray-300">Home</a>
                         <a href ={serviceProvider_id ? "/serviceProviderDashboard/":"/userdashboard/"} className="text-white hover:text-gray-300">Dashboard</a>
+                        {/* <a href ="/Profile">Profile</a> */}
                         </>
                          }
                        {isLoggedIn?<p className="text-white hover:text-gray-300" onClick={async ()=>{

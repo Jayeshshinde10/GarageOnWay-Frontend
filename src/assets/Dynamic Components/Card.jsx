@@ -32,10 +32,10 @@ return (
       
       <h2 className="text-xl font-semibold mb-2">{item.orginazation_name}</h2>
       <p className={` font-medium ${open ?" text-cyan-600 ":"text-red"}`}><span className='text-black'>status</span> :{open?"Open":"Closed"}</p>
-      <p className={` font-medium ${open ?" text-cyan-600 ":"text-red font-normal"}`} >{`${item.opening_time} AM - ${item.closing_time} PM`}</p>
+      <p className={` font-medium ${open ?" text-cyan-600 ":"text-red font-normal"}`} >{`${item.opening_time} - ${item.closing_time} `}</p>
       <p className="text-gray-600 mb-2">{item.distance.toFixed(2)}km Far From you</p>
       <p className="text-gray-600 mb-2">landmark: {item.near_by_landmark}</p>
-      <p className={`${open ?"text-blue":"text-red"}`}>{open?"Open":"Closed"}</p>
+      <p className={`${open ? "text-blue":"text-red"}`}>{open?"Open":"Closed"}</p>
       <button  disabled={!open}className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue" onClick={()=>{handleMakeRequest(true)
       }}>
         Make Request

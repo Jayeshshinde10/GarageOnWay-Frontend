@@ -17,6 +17,7 @@ import UserDashBoard from './assets/Dynamic Components/UserDashBoard';
 import ServiceProviderDashBoard from './assets/Dynamic Components/ServiceProviderDashBoard';
 import EmailConfirmationMessage from './assets/Static Components/Activation';
 import ServiceProviderServices from './assets/Dynamic Components/ServiceProviderServices';
+import ProfileComponent from './assets/Dynamic Components/ProfileComponent';
 
 export default function App() {
   const [username, setUsername] = useState('')
@@ -27,6 +28,7 @@ export default function App() {
   const [error, setError] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [serviceProvider_id, setServiceProvider_id] = useState(null)
+
   // Usage example:
   //const user_id = 123; // Assuming user_id is defined somewhere
   function handleIsLoading() {
@@ -178,6 +180,7 @@ export default function App() {
             <Route path='/serviceProviderDashboard/' element={<ServiceProviderDashBoard />}></Route>
             <Route path='/activation' element={<EmailConfirmationMessage />}></Route>
             <Route path='/serviceProviderHome' element={<ServiceProviderServices/>}></Route>
+            <Route path='/Profile' element={<ProfileComponent/>}></Route>
           </Routes>
         </BrowserRouter>
       </userData.Provider>
