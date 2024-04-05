@@ -32,7 +32,7 @@ const mapUrl = `${generateGoogleMapsEmbedUrl(data.latitude, data.longitude)}`;
     if (isLoggedIn === false) navigator('/login')
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/ServiceProvider/${data.id}`);
+        const response = await axios.get(`/ServiceProvider/${data.id}`);
         setServiceProviderData(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);

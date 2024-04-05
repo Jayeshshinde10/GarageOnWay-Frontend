@@ -25,7 +25,7 @@ export default function Register() {
     e.preventDefault();
     if (isEmailExists == false && isUserNameExist == false) {
       axios.post(
-        'http://127.0.0.1:8000/register/',
+        '/register/',
         {
           username: username,
           fname: fname,
@@ -61,7 +61,7 @@ export default function Register() {
     }
   }
   function handleUserExists() {
-    axios.post("http://127.0.0.1:8000/UsernameExists/", {
+    axios.post("/UsernameExists/", {
       username: username,
       email: email
     }).then((response) => {
@@ -76,7 +76,7 @@ export default function Register() {
   }
   function handleEmailExists() {
     console.log("function got executed")
-    axios.post("http://127.0.0.1:8000/EmailExists/", {
+    axios.post("/EmailExists/", {
       email: email
     }).then((response) => {
       console.log("the data is " + response.data.data);

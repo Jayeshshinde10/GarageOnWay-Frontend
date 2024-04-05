@@ -68,7 +68,7 @@ export default function App() {
           if (response.status === 200) {
             // set USer Logged In     
             console.log(token)
-            const username = await axios.post('http://127.0.0.1:8000/getUsername/',
+            const username = await axios.post('/getUsername/',
               { access_token: token })
             // set here the username
             if (username.status === 200) {
@@ -119,7 +119,7 @@ export default function App() {
 
   async function handleCancelledRequest() {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/order/');
+      const response = await axios.get('/order/');
       if (response.status === 200) {
         const data = response.data;
         console.log(response.data)
@@ -132,7 +132,7 @@ export default function App() {
           const minutesDiff = getMinutesDifference(item.request_time);
           console.log(`Minutes difference for request ${item.id}: ${minutesDiff}`);
           if (minutesDiff >= 1) { // Cancel requests older than 1 hour
-            const cancelResponse = await axios.patch(`http://127.0.0.1:8000/order/${item.id}/`, {
+            const cancelResponse = await axios.patch(`/order/${item.id}/`, {
               is_cancelled: true
             });
 

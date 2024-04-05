@@ -6,7 +6,7 @@ import PaymentModal from './PaymentModal';
 import userData from '../Contexts/UserContext';
 import { useContext } from 'react';
 import PrintableReceipt from './PrintReciept';
-const API_URL = 'http://127.0.0.1:8000/order'; // Replace with your API endpoint
+const API_URL = '/order'; // Replace with your API endpoint
 
 function UserDashBoard() {
  const [data, setData] = useState([]);

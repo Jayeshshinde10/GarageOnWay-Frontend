@@ -107,7 +107,7 @@ import userData from '../Contexts/UserContext';
 import { Navigate, useNavigate } from 'react-router-dom';
 import ResponsiveGoogleMap from './GoogleMaps';
 
-const API_URL = 'http://127.0.0.1:8000/order'; // Replace with your API endpoint
+const API_URL = '/order'; // Replace with your API endpoint
 
 function ServiceProviderDashBoard() {
   const [data, setData] = useState([]);

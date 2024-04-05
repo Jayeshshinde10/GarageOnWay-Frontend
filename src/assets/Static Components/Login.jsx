@@ -19,7 +19,7 @@ function LoginBox() {
     e.preventDefault();
     //Handle form submission logic here
     axios
-      .post("http://127.0.0.1:8000/gettoken/", {
+      .post("/gettoken/", {
         username: credentials.username,
         password: credentials.password,
       })
@@ -41,7 +41,7 @@ function LoginBox() {
           <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
         </Link>
         <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">Login</h1>
-        <form onSubmit={handleSubmit} action='http://127.0.0.1:8000/login/' method='POST'>
+        <form onSubmit={handleSubmit} action='/login/' method='POST'>
         <div className="mb-4">
             <label htmlFor="username" className="block text-gray-700 font-bold mb-2">
               Username

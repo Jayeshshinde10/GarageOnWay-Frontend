@@ -10,7 +10,7 @@ const ServicesList = ({ id }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/Service/');
+        const response = await axios.get('/Service/');
         const filteredData = response.data.filter((item) => item.serviceProvider_id === serviceProvider_id);
         setData(filteredData);
       } catch (error) {
@@ -27,7 +27,7 @@ const ServicesList = ({ id }) => {
     setIsLoading(true);
     try {
       if (window.confirm(`Are You Sure want to delete this service with id ${id}`)) {
-        const deletedata = await axios.delete(`http://127.0.0.1:8000/Service/${id}/`);
+        const deletedata = await axios.delete(`/Service/${id}/`);
         if (deletedata.status === 204) {
           fetchData(); // Refresh data after deletion
         }

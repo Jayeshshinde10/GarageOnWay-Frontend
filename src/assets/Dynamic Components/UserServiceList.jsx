@@ -25,7 +25,7 @@ const ServiceComponent = ({ serviceprovider_id, organization_name }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/vehicles/');
+        const response = await axios.get('/vehicles/');
         setVehicleList(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -38,7 +38,7 @@ const ServiceComponent = ({ serviceprovider_id, organization_name }) => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/Service/?vehicle_type=${vehicleType}&sort_order=${sortOrder}`);
+        const response = await axios.get(`/Service/?vehicle_type=${vehicleType}&sort_order=${sortOrder}`);
         setServices(response.data);
       } catch (error) {
         setError(error);

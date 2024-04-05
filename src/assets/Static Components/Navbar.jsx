@@ -45,7 +45,7 @@ export default function Navbar(){
         <li className="mb-2 hover:bg-violet-700 p-2 rounded-md">
         {isLoggedIn?<p className="text-white" onClick={async ()=>{
                             if (isLoggedIn){
-                                const response = await axios.post('http://127.0.0.1:8000/logout/',{username:username})
+                                const response = await axios.post('/logout/',{username:username})
                                 if(response.status === 200){
                                     console.log("user logged out from the application")
                                     handleLogout();
@@ -78,7 +78,7 @@ export default function Navbar(){
                          }
                        {isLoggedIn?<p className="text-white hover:text-gray-300" onClick={async ()=>{
                             if (isLoggedIn){
-                                const response = await axios.post('http://127.0.0.1:8000/logout/',{username:username})
+                                const response = await axios.post('/logout/',{username:username})
                                 if(response.status === 200){
                                     console.log("user logged out from the application")
                                     handleLogout();
