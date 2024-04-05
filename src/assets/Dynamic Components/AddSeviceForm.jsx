@@ -151,7 +151,7 @@ const AddServiceForm = () => {
 
   async function onSubmit() {
     try {
-      const postRequest = await axios.post('http://127.0.0.1:8000/Service/', {
+      const postRequest = await axios.post('/Service/', {
         name:name,
         description:description,
         price:price,
