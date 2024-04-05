@@ -4,7 +4,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import userData from '../Contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
-export default function ModalForm( {isOpen, closeModal, item} ){
+export default function ModalForm( {isOpen, closeModal, item,latitude ,longitude} ){
   const [vehicleList,setVehicleList] = useState([])
   const [description,setDescription] = useState('');
   const [vehicleName,setVehicleName] = useState('');
@@ -39,7 +39,9 @@ export default function ModalForm( {isOpen, closeModal, item} ){
       approaval_time:null,
       completion_time:null,
       organization_name:item.orginazation_name,
-      Service_id:null
+      Service_id:null,
+      userlatitude:latitude,
+      userlongitude:longitude,
     }); 
     console.log(item.organization_name)
     console.log("request made ")// Replace with your API endpoint
@@ -119,8 +121,8 @@ export default function ModalForm( {isOpen, closeModal, item} ){
           </option>
         ))}
         </datalist>
-
       </div>
+      
       <button className='text-center bg-cyan-600 p-2 m-1 rounded'>Make Request</button>
       </form>
         </div>

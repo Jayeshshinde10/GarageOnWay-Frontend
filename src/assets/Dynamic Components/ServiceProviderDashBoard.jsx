@@ -105,6 +105,7 @@ import Chart from 'chart.js/auto';
 import Navbar from '../Static Components/Navbar';
 import userData from '../Contexts/UserContext';
 import { Navigate, useNavigate } from 'react-router-dom';
+import ResponsiveGoogleMap from './GoogleMaps';
 
 const API_URL = 'http://127.0.0.1:8000/order'; // Replace with your API endpoint
 
@@ -117,6 +118,7 @@ function ServiceProviderDashBoard() {
   const navigate = useNavigate()
   const [selectedRequestId, setSelectedRequestId] = useState(null);
   const [newPrice, setNewPrice] = useState(null); // For immediate requests
+  const [isviewopens,setviewmaps] = useState(false);
 
   useEffect(() => {
     if(isLoggedIn === false){
@@ -333,6 +335,7 @@ function ServiceProviderDashBoard() {
                   <th className="px-4 py-2">Request Type</th>
                   <th className="px-4 py-2">Amount</th>
                   <th className="px-4 py-2">Actions</th>
+                  <td className="px-4 py-2">Location</td>
                 </tr>
               </thead>
               <tbody>
@@ -414,10 +417,17 @@ function ServiceProviderDashBoard() {
                         )}
                         {getRequestStatus(request) === 'Completed' && (
             <PrintableReceipt receiptData={request}/>
+
            )}
+            { isviewopens && <ResponsiveGoogleMap setviewmaps ={setviewmaps} latitude={request.userlatitude} longitude={request.userlongitude}/>}
                     </td>
-                  </tr>
-                ))}
+                    <td className="px-4 py-2"> <button className="btn btn-sm btn-danger bg-green-500 p-2 text-white font-medium" onClick={()=>{setviewmaps(true)}}>
+                          View Location
+                        </button></td>
+                  </tr>               
+                 
+                  ))}
+      
               </tbody>
             </table>
           </div>

@@ -21,7 +21,7 @@ const navigator = useNavigate()
       
 return (
   <>
-  {isModelOpen && <ModalForm isOpen={isModelOpen} item={item} closeModal={closeModal} ></ModalForm>}
+  {isModelOpen && <ModalForm isOpen={isModelOpen} item={item} closeModal={closeModal} latitude={lat1} longitude={lon1}></ModalForm>}
   <div className="max-w-md mx-auto bg-white rounded-md overflow-hidden shadow-md shadow-black">
     <img
       className="w-full h-48 object-cover"

@@ -194,6 +194,7 @@ function UserDashBoard() {
         <th className="px-4 py-2">Service Provider ID</th>
         <th className="px-4 py-2">Request Type</th>
         <th className="px-4 py-2">Amount</th>
+
         {currentUser.isAdmin && <th className="px-4 py-2">Actions</th>}
        </tr>
       </thead>
@@ -242,6 +243,7 @@ function UserDashBoard() {
            }
           </td>
          )}
+         
         </tr>
        ))}
       </tbody>
