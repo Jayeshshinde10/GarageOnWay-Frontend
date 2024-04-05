@@ -61,14 +61,14 @@ export default function App() {
       if (token) {
         console.log("the token is   " + token)
         try {
-          const response = await axios.get('127.0.0.1:8000/verifyToken/', {
+          const response = await axios.get('https://garageonway-backend.onrender.com/verifyToken/', {
             headers: { 'Authorization': `Bearer ${token}` }
           });
 
           if (response.status === 200) {
             // set USer Logged In     
             console.log(token)
-            const username = await axios.post('/getUsername/',
+            const username = await axios.post('https://garageonway-backend.onrender.com/getUsername/',
               { access_token: token })
             // set here the username
             if (username.status === 200) {
@@ -132,7 +132,7 @@ export default function App() {
           const minutesDiff = getMinutesDifference(item.request_time);
           console.log(`Minutes difference for request ${item.id}: ${minutesDiff}`);
           if (minutesDiff >= 1) { // Cancel requests older than 1 hour
-            const cancelResponse = await axios.patch(`/order/${item.id}/`, {
+            const cancelResponse = await axios.patch(`https://garageonway-backend.onrender.com/order/${item.id}/`, {
               is_cancelled: true
             });
 
